@@ -1,18 +1,17 @@
-FROM node:12
+FROM node:18-alpine
 
-LABEL maintainer = "Rain120 <1085131904@qq.com>"
+LABEL maintainer="Rain120 <1085131904@qq.com>"
 
-# Create app directory
-WORKDIR /
+WORKDIR /app
 
-COPY package.json .
+COPY package.json package-lock.json* ./
+RUN npm ci --registry=https://registry.npmmirror.com
 
-RUN yarn install --registry=https://registry.npm.taobao.org
-
-COPY . .
+COPY scripts ./scripts
+COPY src ./src
+COPY public ./public
+COPY tsconfig.json ./
 
 EXPOSE 3200
 
-ENTRYPOINT ["npm", "run"]
-
-CMD ["start"]
+CMD ["node", "-r", "ts-node/register/transpile-only", "src/app.ts"]
