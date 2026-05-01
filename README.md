@@ -4,11 +4,11 @@
 
 <img src='music.png' />
 
-!\[GitHub watchers]\(https\://img.shields.io/github/watchers/rain120/qq-music-api?style=social) !\[GitHub stars]\(https\://img.shields.io/github/stars/rain120/qq-music-api?style=social) !\[GitHub forks]\(https\://img.shields.io/github/forks/rain120/qq-music-api?style=social)
+![GitHub watchers](https\://img.shields.io/github/watchers/rain120/qq-music-api?style=social) ![GitHub stars](https\://img.shields.io/github/stars/rain120/qq-music-api?style=social) ![GitHub forks](https\://img.shields.io/github/forks/rain120/qq-music-api?style=social)
 
-!\[node]\(https\://img.shields.io/node/v/koa?style=flat-square)
+![node](https\://img.shields.io/node/v/koa?style=flat-square)
 
-!\[GitHub repo size]\(https\://img.shields.io/github/repo-size/rain120/qq-music-api?style=flat-square) !\[GitHub package.json version]\(https\://img.shields.io/github/package-json/v/rain120/qq-music-api?style=flat-square) !\[GitHub]\(https\://img.shields.io/github/license/rain120/qq-music-api?style=flat-square) !\[GitHub open issues]\(https\://img.shields.io/github/issues/rain120/qq-music-api?style=flat-square) !\[GitHub closed issues]\(https\://img.shields.io/github/issues-closed/rain120/qq-music-api) !\[GitHub last commit]\(https\://img.shields.io/github/last-commit/rain120/qq-music-api?style=flat-square) !\[GitHub top language]\(https\://img.shields.io/github/languages/top/rain120/qq-music-api?style=flat-square)
+![GitHub repo size](https\://img.shields.io/github/repo-size/rain120/qq-music-api?style=flat-square) ![GitHub package.json version](https\://img.shields.io/github/package-json/v/rain120/qq-music-api?style=flat-square) ![GitHub](https\://img.shields.io/github/license/rain120/qq-music-api?style=flat-square) ![GitHub open issues](https\://img.shields.io/github/issues/rain120/qq-music-api?style=flat-square) ![GitHub closed issues](https\://img.shields.io/github/issues-closed/rain120/qq-music-api) ![GitHub last commit](https\://img.shields.io/github/last-commit/rain120/qq-music-api?style=flat-square) ![GitHub top language](https\://img.shields.io/github/languages/top/rain120/qq-music-api?style=flat-square)
 
 </div>
 
@@ -21,7 +21,7 @@
 
 > 目前暂时没有时间做登录模块的接口，欢迎各位大佬给我`PR`, 阿里嘎多
 
-!\[qq-music]\(./screenshot/qq-music.png)
+![qq-music](./screenshot/qq-music.png)
 
 ### 环境要求
 
