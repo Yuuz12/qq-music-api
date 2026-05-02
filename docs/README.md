@@ -6,6 +6,44 @@
 
 ![qq-music](https://raw.githubusercontent.com/Rain120/qq-music-api/master/screenshot/qq-music.png)
 
+## 当前架构
+
+!> 当前主干分支已经完成 TypeScript 化改造，项目由 `Koa2 + TypeScript` 服务端和内置 `API Explorer` 调试工作台两部分组成。
+
+- `src/app.ts`：应用入口，负责中间件、路由、静态资源与 Explorer 集成。
+- `src/controllers/*`：控制器层，负责参数处理与响应封装。
+- `src/services/*`：服务层，负责访问 QQ 音乐相关数据能力。
+- `src/config/apiExplorer.ts`：Explorer 元数据源，统一维护接口清单、分类、参数与示例请求体。
+- `src/explorer/contracts` / `domain` / `application`：Explorer 的状态模型、树构建、筛选逻辑与 Store/Command。
+- `public/explorer/*`：Explorer 页面静态资源，包括界面、交互和样式。
+- `tests/*`：覆盖控制器、服务、Explorer 元数据、Explorer 领域逻辑和页面路由。
+
+## API Explorer
+
+!> `API Explorer` 是项目内置的本地调试工作台，默认入口为 `http://localhost:3200/explorer`，页面会自动从 `/explorer/metadata` 拉取接口元数据并生成调试表单。
+
+### 主要能力
+
+- 按 `GET` / `POST` 进行方法筛选。
+- 通过接口名、分类和路径关键字快速搜索接口。
+- 自动渲染路径参数、查询参数和 JSON Body 编辑区。
+- 在 `Response` 面板查看最近一次请求结果。
+- 在 `Logs` 面板查看当前会话内的请求日志、状态和错误信息。
+
+### 功能截图
+
+#### 整体预览
+
+![Explorer 整体预览](./explorer-overview.png)
+
+#### 方法筛选
+
+![Explorer 方法筛选](./explorer-method-filter.png)
+
+#### Logs
+
+![Explorer Logs](./explorer-logs.png)
+
 ## API接口
 
 !> koa2 接口说明(参数, 地址, 效果图)

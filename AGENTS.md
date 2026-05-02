@@ -1,125 +1,244 @@
 # 🤖 QQ Music API - AI Agents 指南 (AGENTS.md)
 
-本文档旨在详细说明项目中各 AI 代理（Agents）的角色、功能和使用方式。该指南结构化编写，便于大语言模型（LLM）和开发者快速识别和理解。
+本文档用于说明 `qq-music-api` 当前的真实项目架构、`API Explorer` 的模块分层，以及 AI 代理能力在本仓库中的落点与扩展方式。它既面向开发者，也面向需要理解代码结构的大语言模型（LLM）或自动化工作流。
 
 ## 🎯 目录
 
-1. [代理概述](#代理概述)
-2. [核心代理列表](#核心代理列表)
-3. [使用方式与示例代码](#使用方式与示例代码)
-4. [开发与扩展](#开发与扩展)
+1. [项目概览](#项目概览)
+2. [项目架构](#项目架构)
+3. [Explorer 架构](#explorer-架构)
+4. [AI 代理能力定位](#ai-代理能力定位)
+5. [建议的调用与扩展方式](#建议的调用与扩展方式)
+6. [开发约束](#开发约束)
 
 ---
 
-## 代理概述
+## 项目概览
 
-在 `qq-music-api` 项目中，AI 代理被用于自动化处理复杂的音乐数据获取、歌词解析、以及辅助智能检索。这些代理封装了底层的 API 细节，通过统一的接口与基础框架（Koa2）进行交互，极大地简化了业务层的调用链路。
+`qq-music-api` 是一个基于 `Koa2 + TypeScript` 的服务端项目，核心职责是：
 
-## 核心代理列表
+- 对外暴露统一的 QQ 音乐接口。
+- 在控制器层接收请求、做参数整理并调用服务层。
+- 在服务层请求 QQ 音乐上游能力并返回结构化结果。
+- 提供一个内置的本地 `API Explorer` 页面，方便开发环境调试接口。
 
-### 1. 🎵 DataFetcherAgent (数据获取代理)
-- **角色**: 负责与 QQ 音乐底层接口进行网络通信的核心执行者。
-- **功能**: 
-  - 处理复杂的鉴权机制（如 VKey 计算、Cookie 动态设置）。
-  - 自动拦截并重试失败的网络请求。
-  - 对返回的原始深层 JSON 数据进行提取和初步清理。
-- **适用场景**: 获取歌曲链接、歌手信息、排行榜单、歌单详情等。
-
-### 2. 📝 LyricParserAgent (歌词解析代理)
-- **角色**: 专门处理音乐歌词数据的转化器。
-- **功能**: 
-  - 解析不同格式的歌词文件（如标准 LRC）。
-  - 将时间戳与文本内容进行精准对齐。
-  - 支持多语言翻译映射与音译合并。
-- **适用场景**: 歌曲播放页面的歌词滚动展示、歌词高亮匹配。
-
-### 3. 🔍 SearchOptimizerAgent (搜索优化代理)
-- **角色**: 优化用户搜索体验的智能分析器。
-- **功能**: 
-  - 接收用户模糊搜索输入，分析潜在搜索意图。
-  - 智能路由到最适合的 API 接口进行多维度匹配（如单曲、专辑、歌手、MV 等）。
-  - 聚合多个接口的返回结果并进行相关性排序。
-- **适用场景**: 首页全局搜索、关键字智能提示、热门词推荐。
+当前仓库的主体是标准的 Koa 服务和 Explorer 调试工作台。文档中提到的 AI 代理，更适合作为“能力边界”和“扩展方向”来理解，而不是一个已经完整落地的独立运行时框架。
 
 ---
 
-## 使用方式与示例代码
+## 项目架构
 
-### 初始化与调用代理
+### 1. 服务端主链路
 
-所有的代理实例均建议通过统一的调度器或工厂模式进行初始化，以下为通用调用规范：
+当前请求链路如下：
 
-```javascript
-// 示例：初始化并调用 DataFetcherAgent
-const { AgentFactory } = require('./agents');
-
-async function fetchSingerInfo(singerId) {
-  // 1. 获取对应代理实例
-  const dataAgent = AgentFactory.create('DataFetcherAgent');
-  
-  // 2. 准备请求上下文 (Context)
-  const context = {
-    action: 'get_singer_info',
-    params: { id: singerId },
-    options: { retry: 3 }
-  };
-  
-  // 3. 执行代理任务
-  try {
-    const result = await dataAgent.execute(context);
-    console.log('Singer Info successfully fetched:', result);
-    return result;
-  } catch (error) {
-    console.error('Agent execution failed:', error.message);
-    throw error;
-  }
-}
+```text
+HTTP Request
+  -> Koa App (src/app.ts)
+  -> Middlewares (body parser / cookie / cors / response time / logger)
+  -> Router (src/routes/router.ts)
+  -> Controllers (src/controllers/*)
+  -> Services (src/services/*)
+  -> QQ Music upstream / data parsing
+  -> HTTP Response
 ```
 
-### LLM 调用指令规范 (System Instructions)
-
-如果你是大语言模型（LLM）或其他自动化工作流，请遵循以下 JSON 结构调用代理机制：
-
-```json
-{
-  "agent_type": "SearchOptimizerAgent",
-  "intent": "search_music",
-  "payload": {
-    "keyword": "周杰伦",
-    "limit": 10,
-    "type": "album"
-  },
-  "response_format": "json"
-}
-```
-
----
-
-## 项目目录结构与代理集成
-
-为了更好地理解代理在项目中的定位，以下是 `qq-music-api` 的核心目录结构说明。在实际开发中，AI 代理通常集成在服务层或独立作为核心模块：
+### 2. 主要目录说明
 
 ```text
 qq-music-api/
-├── src/                  # 核心源代码
-│   ├── app.ts            # 应用入口
-│   ├── agents/           # 🤖 AI 代理核心逻辑（建议扩展目录）
-│   ├── controllers/      # 控制器层（接收请求并调用代理）
-│   ├── services/         # 基础业务服务（被代理编排调用）
-│   ├── routes/           # 路由定义
-│   └── util/             # 工具函数
-├── tests/                # 单元测试（需包含代理的 Mock 测试）
-└── docs/                 # 项目文档
+├── src/
+│   ├── app.ts                  # Koa 应用入口，注册中间件、Explorer 路由与静态资源
+│   ├── config/                 # 服务配置、Explorer 元数据配置
+│   ├── controllers/            # 控制器层，处理入参并编排服务调用
+│   ├── explorer/               # Explorer 的 contracts/domain/application 逻辑
+│   ├── middlewares/            # Koa 中间件
+│   ├── routes/                 # 路由注册
+│   ├── services/               # QQ 音乐能力封装与数据获取
+│   ├── types/                  # 共享类型定义
+│   └── util/                   # 公共工具，如 logger、cookie、lyricParse
+├── public/
+│   └── explorer/               # Explorer 静态页面资源（index.html / app.js / styles.css）
+├── tests/                      # Jest + Supertest 测试
+├── docs/                       # Docsify 文档与静态截图资源
+└── README.md                   # 项目主说明
 ```
 
-在扩展新代理时，请将其逻辑归聚于 `src/agents/` 目录，并通过控制器层暴露调用入口。
+### 3. 关键模块职责
+
+- `src/app.ts`
+  - 启动 Koa 服务。
+  - 暴露 `/explorer`、`/explorer/index.html`、`/explorer/metadata`。
+  - 托管 `public/` 下的静态资源。
+  - 在开发环境中配合 `AUTO_OPEN_EXPLORER` 自动打开 Explorer。
+- `src/controllers/*`
+  - 负责解析查询参数与请求体。
+  - 将请求转发到对应 `services`。
+  - 封装统一的 HTTP 返回结构。
+- `src/services/*`
+  - 负责实际的数据拉取、协议拼装与结果加工。
+  - 是当前最接近“数据获取代理”的能力落点。
+- `src/util/logger.ts`
+  - 统一日志出口。
+  - Explorer 的服务端调试日志也通过这里输出。
+- `tests/*`
+  - 覆盖控制器、服务、Explorer 元数据、Explorer 领域逻辑与页面路由。
 
 ---
 
-## 开发与扩展
+## Explorer 架构
 
-如需为本项目添加新的 AI 代理，请遵循以下规范进行开发：
-1. **继承基类**: 必须继承基础的 `BaseAgent` 抽象类。
-2. **实现接口**: 必须实现统一的 `async execute(context)` 异步方法。
-3. **注册代理**: 在 `AgentFactory` 中注册新代理的类映射。
-4. **文档更新**: 为新代理编写单元测试，并在本文件 (`AGENTS.md`) 中更新其角色和功能说明。
+### 1. Explorer 运行方式
+
+`API Explorer` 是仓库内置的本地调试工作台，默认通过以下路径访问：
+
+- 页面入口：`/explorer`
+- 静态页面：`/explorer/index.html`
+- 元数据接口：`/explorer/metadata`
+
+页面会先拉取 `metadata`，再基于元数据动态生成接口选择器、参数表单、请求配置区和会话日志。
+
+### 2. Explorer 分层
+
+当前 Explorer 已形成清晰的模块边界：
+
+```text
+Explorer
+├── Metadata Layer
+│   └── src/config/apiExplorer.ts
+├── Contracts Layer
+│   └── src/explorer/contracts/*
+├── Domain Layer
+│   └── src/explorer/domain/*
+├── Application Layer
+│   └── src/explorer/application/*
+├── View Layer
+│   └── public/explorer/*
+└── Server Integration
+    └── src/app.ts
+```
+
+### 3. 各层职责
+
+- `src/config/apiExplorer.ts`
+  - 定义接口清单、方法、分类、路径参数、查询参数和 `POST` 示例体。
+  - 是 Explorer 动态渲染表单的配置源。
+- `src/explorer/contracts/*`
+  - 定义 Explorer 状态结构、节点模型、历史记录模型等。
+  - 其中状态被拆分为 `resourceState`、`viewState`、`requestState`、`historyState`。
+- `src/explorer/domain/*`
+  - 负责纯逻辑计算，如构建接口树、筛选可见节点、创建请求默认状态。
+  - `selectors.ts` 中实现了搜索关键字与方法筛选的组合过滤。
+- `src/explorer/application/*`
+  - 负责状态容器与命令式更新逻辑。
+  - 当前包含 `ExplorerStore` 与一组 command，用于初始化、切换节点、更新筛选条件等。
+- `public/explorer/*`
+  - 负责真实页面渲染和浏览器交互。
+  - 页面包含方法筛选、接口搜索、动态参数表单、响应预览和 `Logs` 会话日志。
+- `src/app.ts`
+  - 将 Explorer 与主服务集成。
+  - 对 `/explorer` 相关请求输出调试日志，便于排查页面资源或元数据问题。
+
+### 4. Explorer 功能链路
+
+```text
+Open /explorer
+  -> redirect to /explorer/index.html
+  -> fetch /explorer/metadata
+  -> build endpoint list and request form
+  -> select endpoint / fill params / choose method filter
+  -> send HTTP request
+  -> render latest response
+  -> append request log entry to Logs panel
+```
+
+---
+
+## AI 代理能力定位
+
+当前仓库可以从能力上抽象出以下三类代理，它们分别映射到现有代码中的不同层级：
+
+### 1. 🎵 DataFetcherAgent（数据获取代理）
+
+- **当前落点**：`src/services/*`
+- **职责**：
+  - 请求 QQ 音乐相关接口。
+  - 处理服务级数据拼装与返回结构转换。
+  - 为控制器提供稳定的数据访问入口。
+- **典型场景**：
+  - 获取歌曲播放链接
+  - 获取歌手、专辑、排行榜、歌单详情
+  - 批量查询类接口
+
+### 2. 📝 LyricParserAgent（歌词解析代理）
+
+- **当前落点**：`src/util/lyricParse.ts`、歌词相关 controller/service
+- **职责**：
+  - 解析歌词文本。
+  - 将歌词内容转成前端更易消费的结构。
+  - 为歌词接口和后续扩展提供可复用解析能力。
+- **典型场景**：
+  - `getLyric`
+  - 歌词格式化与时间轴处理
+
+### 3. 🔍 SearchOptimizerAgent（搜索优化代理）
+
+- **当前落点**：搜索相关 service/controller 与 Explorer 检索交互
+- **职责**：
+  - 处理关键字搜索、联想提示、热词等能力。
+  - 为接口搜索与调试工作台提供更友好的检索体验。
+  - 在 Explorer 中通过搜索框 + 方法筛选快速收敛候选接口。
+- **典型场景**：
+  - `getSearchByKey`
+  - `getSmartbox`
+  - Explorer 中的接口快速定位
+
+> 说明：以上“代理”目前主要体现为职责分层与能力抽象，而不是已经存在的 `AgentFactory` 运行时实现。如果后续需要引入独立代理系统，建议在保持现有分层不变的前提下新增 `src/agents/` 目录进行封装。
+
+---
+
+## 建议的调用与扩展方式
+
+### 1. 新增一个数据能力的推荐路径
+
+如果需要新增一个“代理能力”或新的接口编排能力，建议按以下路径实现：
+
+1. 在 `src/services/` 新增或扩展服务逻辑。
+2. 在 `src/controllers/` 暴露控制器入口。
+3. 在 `src/routes/` 注册路由。
+4. 在 `src/config/apiExplorer.ts` 注册 Explorer 元数据，让调试工作台可直接使用。
+5. 在 `tests/` 中补齐 controller/service/explorer 相关测试。
+6. 更新 `README.md`、`docs/README.md` 与本文件。
+
+### 2. 建议的 LLM 调用上下文
+
+如果由 LLM 或自动化工作流驱动，请优先关注以下上下文：
+
+```json
+{
+  "target_layer": "service | controller | explorer",
+  "intent": "fetch_music_data | parse_lyric | optimize_search | debug_explorer",
+  "entry": {
+    "http_path": "/explorer/metadata",
+    "route": "/getSearchByKey/:key?/:limit?/:page?/:catZhida?"
+  },
+  "artifacts": [
+    "src/config/apiExplorer.ts",
+    "src/controllers",
+    "src/services",
+    "public/explorer"
+  ]
+}
+```
+
+---
+
+## 开发约束
+
+在为本项目增加 AI 代理或扩展 Explorer 时，请遵循以下约束：
+
+1. **保持真实架构一致**：优先复用 `controller -> service -> util` 的现有链路，不要凭空创建与仓库不一致的运行时抽象。
+2. **元数据驱动优先**：Explorer 中新增接口调试能力时，应优先扩展 `src/config/apiExplorer.ts`。
+3. **状态职责分离**：Explorer 状态需继续遵循 `resourceState`、`viewState`、`requestState`、`historyState` 分层。
+4. **统一日志**：服务端日志统一走 `src/util/logger.ts`。
+5. **测试与文档同步**：新增能力后，必须同步更新测试与文档。
