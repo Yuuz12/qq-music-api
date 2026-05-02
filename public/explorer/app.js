@@ -12,7 +12,11 @@
     responsePreview: document.getElementById('response-preview'),
     sendRequestButton: document.getElementById('send-request'),
     logMeta: document.getElementById('log-meta'),
-    requestLogDetail: document.getElementById('request-log-detail'),
+    logSearchInput: document.getElementById('log-search-input'),
+    logFilterGroup: document.getElementById('log-filter-group'),
+    requestLogList: document.getElementById('request-log-list'),
+    jumpLatestLogButton: document.getElementById('jump-latest-log'),
+    jumpLatestErrorLogButton: document.getElementById('jump-latest-error-log'),
   };
 
   const state = {
@@ -25,6 +29,17 @@
     comboboxOpen: false,
     comboboxBlurTimer: null,
     requestLogs: [],
+    activeLogId: null,
+    logSearchKeyword: '',
+    logStatusFilter: 'ALL',
+    isAutoFocusLatestLog: true,
+  };
+
+  const LOG_FILTERS = {
+    ALL: 'ALL',
+    ERROR: 'ERROR',
+    PENDING: 'PENDING',
+    SUCCESS: 'SUCCESS',
   };
 
   function getActiveEndpoint() {
@@ -82,6 +97,16 @@
     return `${duration}ms`;
   }
 
+  function formatFullTimestamp(timestamp) {
+    try {
+      return new Date(timestamp).toLocaleString('zh-CN', {
+        hour12: false,
+      });
+    } catch (_error) {
+      return timestamp;
+    }
+  }
+
   function getStatusLabel(status) {
     if (status === 'pending') {
       return '进行中';
@@ -92,6 +117,141 @@
     }
 
     return String(status);
+  }
+
+  function getLogVisualState(status) {
+    if (status === 'pending') {
+      return 'pending';
+    }
+
+    if (status === 'error' || (typeof status === 'number' && status >= 400)) {
+      return 'error';
+    }
+
+    return 'success';
+  }
+
+  function getLogStatusEmoji(log) {
+    const visualState = getLogVisualState(log.status);
+
+    if (visualState === 'pending') {
+      return '⏳';
+    }
+
+    if (visualState === 'error') {
+      return '❌';
+    }
+
+    return '✅';
+  }
+
+  function getLogStatusText(log) {
+    const visualState = getLogVisualState(log.status);
+
+    if (visualState === 'pending') {
+      return '进行中';
+    }
+
+    if (visualState === 'error') {
+      return typeof log.status === 'number' ? `失败 ${log.status}` : '请求失败';
+    }
+
+    return typeof log.status === 'number' ? `成功 ${log.status}` : '请求成功';
+  }
+
+  function normalizeLogSearchKeyword(value) {
+    return String(value || '')
+      .trim()
+      .toLowerCase();
+  }
+
+  function buildLogSearchText(log) {
+    return [
+      log.endpointName,
+      log.method,
+      log.url,
+      getStatusLabel(log.status),
+      getLogStatusText(log),
+      log.errorMessage,
+      log.responsePreview,
+    ]
+      .join(' ')
+      .toLowerCase();
+  }
+
+  function buildLogSummaryText() {
+    if (!state.requestLogs.length) {
+      return '当前会话暂无请求记录';
+    }
+
+    const errorCount = state.requestLogs.filter((log) => getLogVisualState(log.status) === 'error').length;
+    const latestLog = state.requestLogs[0];
+
+    return `共 ${state.requestLogs.length} 条日志 · 失败 ${errorCount} 条 · 最近 ${formatTimestamp(latestLog.timestamp)}`;
+  }
+
+  function getLogPreviewText(log) {
+    const sourceText = log.errorMessage || log.responsePreview || '(empty)';
+    const compactText = sourceText
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join(' ');
+
+    return compactText.length > 96 ? `${compactText.slice(0, 96)}...` : compactText;
+  }
+
+  function getLogUrlPreview(url) {
+    return url.length > 84 ? `${url.slice(0, 84)}...` : url;
+  }
+
+  function getVisibleRequestLogs() {
+    const keyword = normalizeLogSearchKeyword(state.logSearchKeyword);
+
+    return state.requestLogs.filter((log) => {
+      const visualState = getLogVisualState(log.status);
+      const matchesFilter = state.logStatusFilter === LOG_FILTERS.ALL || visualState === state.logStatusFilter.toLowerCase();
+      const matchesKeyword = !keyword || buildLogSearchText(log).includes(keyword);
+
+      return matchesFilter && matchesKeyword;
+    });
+  }
+
+  function getLatestRequestLog() {
+    return state.requestLogs[0] || null;
+  }
+
+  function getLatestErrorLog() {
+    return state.requestLogs.find((log) => getLogVisualState(log.status) === 'error') || null;
+  }
+
+  function ensureActiveLogSelection(visibleLogs) {
+    if (!visibleLogs.length) {
+      state.activeLogId = null;
+      return null;
+    }
+
+    const activeLog = visibleLogs.find((log) => log.id === state.activeLogId);
+    if (activeLog) {
+      return activeLog;
+    }
+
+    state.activeLogId = visibleLogs[0].id;
+    return visibleLogs[0];
+  }
+
+  function scrollLogItemIntoView(logId) {
+    if (!logId) {
+      return;
+    }
+
+    const logItem = elements.requestLogList.querySelector(`[data-log-id="${logId}"]`);
+    if (logItem) {
+      logItem.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
   }
 
   function filterEndpoints(endpoints, searchKeyword, methodFilter) {
@@ -520,16 +680,16 @@
   }
 
   function formatRequestLogDetail(log) {
-    const header = `$ [${formatTimestamp(log.timestamp)}] ${log.method} ${log.url}`;
-    const responseLabel = log.errorMessage ? '> error' : '> response';
+    const responseLabel = log.errorMessage ? 'Error' : 'Response';
 
     return [
-      header,
-      `> endpoint: ${log.endpointName}`,
-      `> status: ${getStatusLabel(log.status)}`,
-      `> duration: ${formatDuration(log.duration)}`,
+      `${getLogStatusEmoji(log)} ${log.method} ${log.endpointName}`,
+      `时间: ${formatFullTimestamp(log.timestamp)}`,
+      `状态: ${getLogStatusText(log)}`,
+      `耗时: ${formatDuration(log.duration)}`,
+      `URL: ${log.url}`,
       '',
-      '> request body',
+      'Request Body',
       log.requestBody || '(empty)',
       '',
       responseLabel,
@@ -537,31 +697,143 @@
     ].join('\n');
   }
 
-  function renderRequestLogs() {
+  function renderLogToolbar() {
+    elements.logMeta.textContent = buildLogSummaryText();
+    elements.logSearchInput.value = state.logSearchKeyword;
+
+    elements.logFilterGroup.querySelectorAll('[data-log-filter]').forEach((button) => {
+      const isActive = button.dataset.logFilter === state.logStatusFilter;
+      button.classList.toggle('is-active', isActive);
+    });
+
+    elements.jumpLatestLogButton.disabled = !getLatestRequestLog();
+    elements.jumpLatestErrorLogButton.disabled = !getLatestErrorLog();
+  }
+
+  function createLogItem(log) {
+    const visualState = getLogVisualState(log.status);
+    const logItem = document.createElement('button');
+    logItem.type = 'button';
+    logItem.className = `log-item ${visualState}`;
+    logItem.dataset.logId = log.id;
+    logItem.classList.toggle('is-active', log.id === state.activeLogId);
+
+    const emoji = document.createElement('span');
+    emoji.className = 'log-item-emoji';
+    emoji.textContent = getLogStatusEmoji(log);
+
+    const content = document.createElement('div');
+    content.className = 'log-item-main';
+
+    const header = document.createElement('div');
+    header.className = 'log-item-header';
+
+    const title = document.createElement('div');
+    title.className = 'log-item-title';
+
+    const methodBadge = document.createElement('span');
+    methodBadge.className = `log-method-badge ${String(log.method).toLowerCase()}`;
+    methodBadge.textContent = log.method;
+
+    const titleText = document.createElement('span');
+    titleText.className = 'log-item-title-text';
+    titleText.textContent = log.endpointName;
+
+    title.appendChild(methodBadge);
+    title.appendChild(titleText);
+
+    const time = document.createElement('span');
+    time.className = 'log-item-time';
+    time.textContent = formatTimestamp(log.timestamp);
+
+    header.appendChild(title);
+    header.appendChild(time);
+
+    const summary = document.createElement('p');
+    summary.className = 'log-item-summary';
+    summary.textContent = getLogPreviewText(log);
+
+    const footer = document.createElement('div');
+    footer.className = 'log-item-footer';
+
+    const statusBadge = document.createElement('span');
+    statusBadge.className = `status-badge ${visualState}`;
+    statusBadge.textContent = getLogStatusText(log);
+
+    const duration = document.createElement('span');
+    duration.className = 'log-item-time';
+    duration.textContent = `耗时 ${formatDuration(log.duration)}`;
+
+    const urlPreview = document.createElement('span');
+    urlPreview.className = 'log-item-url';
+    urlPreview.textContent = getLogUrlPreview(log.url);
+
+    footer.appendChild(statusBadge);
+    footer.appendChild(duration);
+
+    content.appendChild(header);
+    content.appendChild(summary);
+    content.appendChild(footer);
+    content.appendChild(urlPreview);
+
+    if (log.id === state.activeLogId) {
+      const detail = document.createElement('pre');
+      detail.className = 'code-block log-item-detail';
+      detail.textContent = formatRequestLogDetail(log);
+      content.appendChild(detail);
+    }
+
+    logItem.appendChild(emoji);
+    logItem.appendChild(content);
+
+    return logItem;
+  }
+
+  function renderLogList(visibleLogs) {
+    elements.requestLogList.innerHTML = '';
+
     if (!state.requestLogs.length) {
-      elements.logMeta.textContent = '当前会话暂无请求记录';
-      elements.requestLogDetail.textContent = '发送请求后将在这里看到会话日志。';
+      const emptyState = document.createElement('div');
+      emptyState.className = 'log-empty-state';
+      emptyState.textContent = '发送请求后将在这里看到会话日志。';
+      elements.requestLogList.appendChild(emptyState);
+      return;
+    }
+
+    if (!visibleLogs.length) {
+      const emptyState = document.createElement('div');
+      emptyState.className = 'log-empty-state';
+      emptyState.textContent = '没有匹配的日志，请调整搜索或筛选条件。';
+      elements.requestLogList.appendChild(emptyState);
+      return;
+    }
+
+    visibleLogs.forEach((log) => {
+      elements.requestLogList.appendChild(createLogItem(log));
+    });
+  }
+
+  function renderRequestLogs() {
+    const visibleLogs = getVisibleRequestLogs();
+    const activeLog = ensureActiveLogSelection(visibleLogs);
+
+    renderLogToolbar();
+    renderLogList(visibleLogs);
+
+    if (!state.requestLogs.length) {
       logRequestLifecycle('render-empty', {
         requestLogCount: 0,
       });
       return;
     }
 
-    elements.logMeta.textContent = `当前会话共 ${state.requestLogs.length} 条请求记录`;
-    elements.requestLogDetail.textContent = state.requestLogs
-      .map((log, index) =>
-        [
-          `========== session record ${String(index + 1).padStart(2, '0')} ==========`,
-          formatRequestLogDetail(log),
-        ].join('\n'),
-      )
-      .join('\n\n');
-
     logRequestLifecycle('render-detail', {
       requestLogCount: state.requestLogs.length,
-      latestStatus: state.requestLogs[0]?.status,
-      latestDuration: state.requestLogs[0]?.duration,
-      latestEndpointName: state.requestLogs[0]?.endpointName,
+      visibleLogCount: visibleLogs.length,
+      latestStatus: getLatestRequestLog()?.status,
+      latestDuration: getLatestRequestLog()?.duration,
+      latestEndpointName: getLatestRequestLog()?.endpointName,
+      activeLogId: activeLog?.id || null,
     });
   }
 
@@ -597,6 +869,60 @@
     state.activeEndpointId = endpointId;
     renderToolbar();
     renderActiveEndpoint();
+  }
+
+  function handleLogSearchChange(keyword) {
+    state.logSearchKeyword = keyword;
+    renderRequestLogs();
+  }
+
+  function handleLogStatusFilterChange(filter) {
+    state.logStatusFilter = filter;
+    renderRequestLogs();
+  }
+
+  function handleLogSelect(logId, options = {}) {
+    if (!logId) {
+      return;
+    }
+
+    const { shouldFollowLatest = false, shouldScrollIntoView = false } = options;
+
+    state.activeLogId = logId;
+    state.isAutoFocusLatestLog = shouldFollowLatest;
+    renderRequestLogs();
+
+    if (shouldScrollIntoView) {
+      scrollLogItemIntoView(logId);
+    }
+  }
+
+  function jumpToLatestLog() {
+    const latestLog = getLatestRequestLog();
+    if (!latestLog) {
+      return;
+    }
+
+    state.logSearchKeyword = '';
+    state.logStatusFilter = LOG_FILTERS.ALL;
+    handleLogSelect(latestLog.id, {
+      shouldFollowLatest: true,
+      shouldScrollIntoView: true,
+    });
+  }
+
+  function jumpToLatestErrorLog() {
+    const latestErrorLog = getLatestErrorLog();
+    if (!latestErrorLog) {
+      return;
+    }
+
+    state.logSearchKeyword = '';
+    state.logStatusFilter = LOG_FILTERS.ALL;
+    handleLogSelect(latestErrorLog.id, {
+      shouldFollowLatest: false,
+      shouldScrollIntoView: true,
+    });
   }
 
   function openCombobox() {
@@ -654,7 +980,13 @@
     const startTime = performance.now();
 
     state.requestLogs.unshift(logEntry);
+    if (state.isAutoFocusLatestLog || !state.activeLogId) {
+      state.activeLogId = logEntry.id;
+    }
     renderRequestLogs();
+    if (state.activeLogId === logEntry.id) {
+      scrollLogItemIntoView(logEntry.id);
+    }
 
     elements.sendRequestButton.disabled = true;
     elements.sendRequestButton.textContent = '请求中...';
@@ -737,6 +1069,9 @@
       elements.sendRequestButton.textContent = '发送请求';
       renderRequestLogs();
       renderToolbar();
+      if (state.activeLogId === logEntry.id) {
+        scrollLogItemIntoView(logEntry.id);
+      }
       logRequestLifecycle('send-finish', {
         logId: logEntry.id,
         requestLogCount: state.requestLogs.length,
@@ -831,6 +1166,35 @@
     closeCombobox();
   });
 
+  elements.logSearchInput.addEventListener('input', (event) => {
+    handleLogSearchChange(event.target.value);
+  });
+
+  elements.logFilterGroup.addEventListener('click', (event) => {
+    const target = event.target.closest('[data-log-filter]');
+
+    if (!target) {
+      return;
+    }
+
+    handleLogStatusFilterChange(target.dataset.logFilter);
+  });
+
+  elements.requestLogList.addEventListener('click', (event) => {
+    const target = event.target.closest('[data-log-id]');
+
+    if (!target) {
+      return;
+    }
+
+    handleLogSelect(target.dataset.logId, {
+      shouldFollowLatest: false,
+      shouldScrollIntoView: false,
+    });
+  });
+
+  elements.jumpLatestLogButton.addEventListener('click', jumpToLatestLog);
+  elements.jumpLatestErrorLogButton.addEventListener('click', jumpToLatestErrorLog);
   elements.sendRequestButton.addEventListener('click', sendRequest);
 
   initialize();

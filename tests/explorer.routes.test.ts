@@ -64,7 +64,13 @@ describe('Explorer routes', () => {
     expect(response.text).toContain('workspace-params-section');
     expect(response.text).toContain('workspace-results');
     expect(response.text).toContain('workspace-log-card');
-    expect(response.text).toContain('request-log-detail');
+    expect(response.text).toContain('log-search-input');
+    expect(response.text).toContain('log-filter-group');
+    expect(response.text).toContain('request-log-list');
+    expect(response.text).toContain('jump-latest-log');
+    expect(response.text).toContain('jump-latest-error-log');
+    expect(response.text).toContain('data-log-filter="ERROR"');
+    expect(response.text).toContain('data-log-filter="PENDING"');
     expect(response.text).toContain('aria-label="搜索并选择接口"');
     expect(response.text).not.toContain('sidebar');
     expect(response.text).not.toContain('endpoint-list');
@@ -74,7 +80,8 @@ describe('Explorer routes', () => {
     expect(response.text).not.toContain('endpoint-count');
     expect(response.text).not.toContain('当前接口');
     expect(response.text).not.toContain('request-section-toggle-button');
-    expect(response.text).not.toContain('request-log-list');
+    expect(response.text).not.toContain('log-detail-panel');
+    expect(response.text).not.toContain('request-log-detail');
     expect(response.text).not.toContain('workspace-tab-list');
   });
 

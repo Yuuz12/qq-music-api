@@ -94,8 +94,30 @@
             </div>
           </div>
 
+          <div class="log-toolbar">
+            <input
+              id="log-search-input"
+              class="input log-search-input"
+              type="text"
+              placeholder="搜索接口、URL、状态或错误"
+              aria-label="搜索日志"
+              autocomplete="off"
+            >
+
+            <div id="log-filter-group" class="log-filter-group" aria-label="日志筛选">
+              <button type="button" class="log-filter-chip is-active" data-log-filter="ALL">全部</button>
+              <button type="button" class="log-filter-chip" data-log-filter="ERROR">仅失败</button>
+              <button type="button" class="log-filter-chip" data-log-filter="PENDING">仅进行中</button>
+              <button type="button" class="log-filter-chip" data-log-filter="SUCCESS">仅成功</button>
+              <button id="jump-latest-log" type="button" class="log-filter-chip">最近请求</button>
+              <button id="jump-latest-error-log" type="button" class="log-filter-chip">最近失败</button>
+            </div>
+          </div>
+
           <div class="log-layout">
-            <pre id="request-log-detail" class="code-block log-detail" aria-live="polite">发送请求后将在这里看到会话日志。</pre>
+            <div id="request-log-list" class="log-list" aria-live="polite">
+              <div class="log-empty-state">发送请求后将在这里看到会话日志。</div>
+            </div>
           </div>
         </section>
       </section>
