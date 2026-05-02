@@ -36,14 +36,6 @@
 
 ![Explorer 整体预览](./explorer-overview.png)
 
-#### 方法筛选
-
-![Explorer 方法筛选](./explorer-method-filter.png)
-
-#### Logs
-
-![Explorer Logs](./explorer-logs.png)
-
 ## API接口
 
 !> koa2 接口说明(参数, 地址, 效果图)

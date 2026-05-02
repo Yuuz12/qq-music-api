@@ -15,6 +15,7 @@
 > QQ 音乐 API，基于 `Koa2 + TypeScript` 构建，通过 Web 端请求 QQ 音乐接口数据。本项目集成了自动化数据处理代理，提供高效、易用的接口服务。
 > 有问题请提 [issue](https://github.com/Rain120/qq-music-api/issues)。欢迎阅读 [参与贡献指南](./CONTRIBUTING.md) 参与项目开发，并查阅 [AI 代理指南](./AGENTS.md) 了解自动化机制。
 > 当前主干分支已完成 TypeScript 化改造，核心源码、测试与构建链路均已切换到 TypeScript 体系。
+> TypeScript 版本请使用 `next` 分支，JavaScript 版本请使用 `main` 分支。
 
 > ⚠️ 当前代码仅供学习，不可做商业用途。
 
@@ -123,14 +124,6 @@ AUTO_OPEN_EXPLORER=false npm run dev
 **整体预览**
 
 ![Explorer 整体预览](./docs/explorer-overview.png)
-
-**方法筛选**
-
-![Explorer 方法筛选](./docs/explorer-method-filter.png)
-
-**Logs**
-
-![Explorer Logs](./docs/explorer-logs.png)
 
 #### Explorer 使用示例
 
