@@ -4,7 +4,7 @@
   "description": "qq music api, just for study",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "dev": "AUTO_OPEN_EXPLORER=true ts-node-dev --respawn --transpile-only src/app.ts",
     "start": "node -r ts-node/register/transpile-only src/app.ts",
     "build": "tsc -p tsconfig.json --noEmit",
     "docs": "docsify serve docs -p 9611",

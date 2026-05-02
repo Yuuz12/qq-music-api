@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>QQ Music API Explorer</title>
+  <link rel="stylesheet" href="/explorer/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header-content">
+      <div class="app-header-copy">
+        <p class="eyebrow">QQ Music API</p>
+        <h1 id="page-title">QQ Music API Explorer</h1>
+        <p id="page-description" class="app-header-description">本地接口调试工作台</p>
+      </div>
+
+      <div class="app-header-links">
+        <a class="header-link" href="/">返回首页</a>
+        <a class="header-link is-primary" href="https://rain120.github.io/qq-music-api/" target="_blank" rel="noreferrer">在线文档</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <main class="workspace">
+      <section class="panel workspace-toolbar">
+        <div class="workspace-toolbar-controls">
+          <div class="toolbar-group toolbar-combobox-shell">
+            <select id="method-select" class="input toolbar-method-select" aria-label="请求方法">
+              <option value="ALL">All</option>
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+            </select>
+
+            <div class="endpoint-combobox">
+              <input
+                id="endpoint-combobox-input"
+                class="input endpoint-combobox-input"
+                type="text"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-controls="endpoint-combobox-list"
+                aria-label="搜索并选择接口"
+                placeholder="搜索并选择接口"
+                autocomplete="off"
+              >
+
+              <div
+                id="endpoint-combobox-list"
+                class="endpoint-combobox-list hidden"
+                role="listbox"
+                aria-label="接口候选列表"
+              ></div>
+            </div>
+          </div>
+
+          <div class="toolbar-group toolbar-action-group">
+            <button id="send-request" type="button">发送请求</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="workspace-params-section" class="panel workspace-params hidden">
+        <div class="panel-header">
+          <div>
+            <h2>Request Params</h2>
+            <span id="form-hint" class="muted">根据接口动态生成</span>
+          </div>
+        </div>
+
+        <div id="request-panels" class="request-panels" aria-live="polite"></div>
+      </section>
+
+      <section class="workspace-results">
+        <section class="panel workspace-response-card">
+          <div class="panel-header">
+            <div>
+              <h2>Response</h2>
+              <span id="response-meta" class="muted">尚未发起请求</span>
+            </div>
+          </div>
+
+          <pre id="response-preview" class="code-block">等待请求...</pre>
+        </section>
+
+        <section class="panel workspace-log-card">
+          <div class="panel-header">
+            <div>
+              <h2>Logs</h2>
+              <span id="log-meta" class="muted">当前会话暂无请求记录</span>
+            </div>
+          </div>
+
+          <div class="log-layout">
+            <pre id="request-log-detail" class="code-block log-detail" aria-live="polite">发送请求后将在这里看到会话日志。</pre>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="/explorer/app.js"></script>
+</body>
+</html>

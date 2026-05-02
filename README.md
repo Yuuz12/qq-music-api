@@ -65,6 +65,13 @@ npm start
 
 项目默认监听端口是 `3200`，启动成功后可在浏览器访问 `http://localhost:3200` 体验接口服务。
 
+#### 🔎 API Explorer
+
+- 执行 `npm run dev` 后，开发环境会自动打开本地 `API Explorer` 页面。
+- 默认入口地址是 `http://localhost:3200/explorer`。
+- Explorer 支持选择接口、填写查询参数或 JSON Body，并直接查看响应状态和返回结果。
+- 如不希望自动打开浏览器，可在启动前设置 `AUTO_OPEN_EXPLORER=false`。
+
 ### 🧱 当前技术栈与状态
 
 - 服务框架：`Koa2`
