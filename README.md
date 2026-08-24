@@ -207,6 +207,10 @@ docker pull qq-music-api
 - [x] 获取票务信息
 - [x] 获取歌单详情
 - [x] 获取歌手列表
+- [x] 获取电台歌曲（猜你喜欢/分类电台）**2026-08**
+- [x] 添加/取消喜欢（写入「我喜欢」，`musicasset.PlaylistDetailWrite`）**2026-08**
+- [x] 批量查询歌曲喜欢状态（红心，`SongFavRead/IsSongFanByMid`）**2026-08**
+- [x] 电台「删除」按钮统计上报还原（`fcg_val_report.fcg`）**2026-08**
 
 ### 使用文档
 

@@ -4,10 +4,12 @@ import batchGetSongLists from './batchGetSongLists';
 import cookies from './cookies';
 import getAlbumInfo from './getAlbumInfo';
 import getComments from './getComments';
+import getDailyPlaylist from './getDailyPlaylist';
 import getDigitalAlbumLists from './getDigitalAlbumLists';
 import getDownloadQQMusic from './getDownloadQQMusic';
 import getHotKey from './getHotkey';
 import getImageUrl from './getImageUrl';
+import getIsSongFan from './getIsSongFan';
 import getLyric from './getLyric';
 import getMusicPlay from './getMusicPlay';
 import getMv from './getMv';
@@ -15,8 +17,10 @@ import getMvByTag from './getMvByTag';
 import getMvPlay from './getMvPlay';
 import getNewDisks from './getNewDisks';
 import getRadioLists from './getRadioLists';
+import getRadioTrack from './getRadioTrack';
 import getRanks from './getRanks';
 import getRecommend from './getRecommend';
+import getRelationList from './getRelationList';
 import getSearchByKey from './getSearchByKey';
 import getSimilarSinger from './getSimilarSinger';
 import getSingerAlbum from './getSingerAlbum';
@@ -32,6 +36,10 @@ import getSongListDetail from './getSongListDetail';
 import getSongLists from './getSongLists';
 import getTicketInfo from './getTicketInfo';
 import getTopLists from './getTopLists';
+import getUserFavDiss from './getUserFavDiss';
+import getUserProfile from './getUserProfile';
+import radioDislike from './radioDislike';
+import setFav from './setFav';
 
 const { get: getCookie, set: setCookie } = cookies;
 
@@ -59,15 +67,23 @@ export default {
   getSingerDesc: withControllerLogging('getSingerDesc', getSingerDesc),
   getSingerStarNum: withControllerLogging('getSingerStarNum', getSingerStarNum),
   getRadioLists: withControllerLogging('getRadioLists', getRadioLists),
+  getRadioTrack: withControllerLogging('getRadioTrack', getRadioTrack),
+  radioDislike: withControllerLogging('radioDislike', radioDislike),
+  setFav: withControllerLogging('setFav', setFav),
+  getIsSongFan: withControllerLogging('getIsSongFan', getIsSongFan),
   getDigitalAlbumLists: withControllerLogging('getDigitalAlbumLists', getDigitalAlbumLists),
   getLyric: withControllerLogging('getLyric', getLyric),
   getMusicPlay: withControllerLogging('getMusicPlay', getMusicPlay),
   getAlbumInfo: withControllerLogging('getAlbumInfo', getAlbumInfo),
   getComments: withControllerLogging('getComments', getComments),
+  getDailyPlaylist: withControllerLogging('getDailyPlaylist', getDailyPlaylist),
   getRecommend: withControllerLogging('getRecommend', getRecommend),
   getMvPlay: withControllerLogging('getMvPlay', getMvPlay),
   getTopLists: withControllerLogging('getTopLists', getTopLists),
   getRanks: withControllerLogging('getRanks', getRanks),
   getTicketInfo: withControllerLogging('getTicketInfo', getTicketInfo),
   getImageUrl: withControllerLogging('getImageUrl', getImageUrl),
+  getUserProfile: withControllerLogging('getUserProfile', getUserProfile),
+  getUserFavDiss: withControllerLogging('getUserFavDiss', getUserFavDiss),
+  getRelationList: withControllerLogging('getRelationList', getRelationList),
 };

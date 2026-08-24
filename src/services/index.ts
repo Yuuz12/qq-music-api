@@ -5,12 +5,17 @@ import getComments from './comments/getComments';
 // DigitalAlbum
 import getDigitalAlbumLists from './digitalAlbum/getDigitalAlbumLists';
 import downloadQQMusic from './downloadQQMusic';
+// fav
+import getIsSongFan from './fav/getIsSongFan';
+import setFav from './fav/setFav';
 // music
 import getLyric from './music/getLyric';
 // MV
 import getMvByTag from './mv/getMvByTag';
 // radio
 import getRadioLists from './radio/getRadioLists';
+import getRadioTrack from './radio/getRadioTrack';
+import radioDislike from './radio/radioDislike';
 // getTopLists
 import getTopLists from './rank/getTopLists';
 // search
@@ -28,6 +33,10 @@ import songListDetail from './songLists/songListDetail';
 import songLists from './songLists/songLists';
 // UCommon
 import UCommon from './UCommon/UCommon';
+// user
+import getRelationList from './user/getRelationList';
+import getUserFavDiss from './user/getUserFavDiss';
+import getUserProfile from './user/getUserProfile';
 
 export default {
   downloadQQMusic,
@@ -48,6 +57,11 @@ export default {
   getSingerStarNum,
   // radio
   getRadioLists,
+  getRadioTrack,
+  radioDislike,
+  // fav（喜欢/红心）
+  getIsSongFan,
+  setFav,
   // DigitalAlbum
   getDigitalAlbumLists,
   // music
@@ -58,6 +72,10 @@ export default {
   getComments,
   // UCommon
   UCommon,
+  // user
+  getUserProfile,
+  getUserFavDiss,
+  getRelationList,
   // getTopLists
   getTopLists,
 };

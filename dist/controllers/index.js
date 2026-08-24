@@ -1,0 +1,92 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const observability_1 = require("../util/observability");
+const batchGetSongInfo_1 = __importDefault(require("./batchGetSongInfo"));
+const batchGetSongLists_1 = __importDefault(require("./batchGetSongLists"));
+const cookies_1 = __importDefault(require("./cookies"));
+const getAlbumInfo_1 = __importDefault(require("./getAlbumInfo"));
+const getComments_1 = __importDefault(require("./getComments"));
+const getDailyPlaylist_1 = __importDefault(require("./getDailyPlaylist"));
+const getDigitalAlbumLists_1 = __importDefault(require("./getDigitalAlbumLists"));
+const getDownloadQQMusic_1 = __importDefault(require("./getDownloadQQMusic"));
+const getHotkey_1 = __importDefault(require("./getHotkey"));
+const getImageUrl_1 = __importDefault(require("./getImageUrl"));
+const getIsSongFan_1 = __importDefault(require("./getIsSongFan"));
+const getLyric_1 = __importDefault(require("./getLyric"));
+const getMusicPlay_1 = __importDefault(require("./getMusicPlay"));
+const getMv_1 = __importDefault(require("./getMv"));
+const getMvByTag_1 = __importDefault(require("./getMvByTag"));
+const getMvPlay_1 = __importDefault(require("./getMvPlay"));
+const getNewDisks_1 = __importDefault(require("./getNewDisks"));
+const getRadioLists_1 = __importDefault(require("./getRadioLists"));
+const getRadioTrack_1 = __importDefault(require("./getRadioTrack"));
+const getRanks_1 = __importDefault(require("./getRanks"));
+const getRecommend_1 = __importDefault(require("./getRecommend"));
+const getRelationList_1 = __importDefault(require("./getRelationList"));
+const getSearchByKey_1 = __importDefault(require("./getSearchByKey"));
+const getSimilarSinger_1 = __importDefault(require("./getSimilarSinger"));
+const getSingerAlbum_1 = __importDefault(require("./getSingerAlbum"));
+const getSingerDesc_1 = __importDefault(require("./getSingerDesc"));
+const getSingerHotsong_1 = __importDefault(require("./getSingerHotsong"));
+const getSingerList_1 = __importDefault(require("./getSingerList"));
+const getSingerMv_1 = __importDefault(require("./getSingerMv"));
+const getSingerStarNum_1 = __importDefault(require("./getSingerStarNum"));
+const getSmartbox_1 = __importDefault(require("./getSmartbox"));
+const getSongInfo_1 = __importDefault(require("./getSongInfo"));
+const getSongListCategories_1 = __importDefault(require("./getSongListCategories"));
+const getSongListDetail_1 = __importDefault(require("./getSongListDetail"));
+const getSongLists_1 = __importDefault(require("./getSongLists"));
+const getTicketInfo_1 = __importDefault(require("./getTicketInfo"));
+const getTopLists_1 = __importDefault(require("./getTopLists"));
+const getUserProfile_1 = __importDefault(require("./getUserProfile"));
+const getUserFavDiss_1 = __importDefault(require("./getUserFavDiss"));
+const radioDislike_1 = __importDefault(require("./radioDislike"));
+const setFav_1 = __importDefault(require("./setFav"));
+const { get: getCookie, set: setCookie } = cookies_1.default;
+exports.default = {
+    getCookie: (0, observability_1.withControllerLogging)('getCookie', getCookie),
+    setCookie: (0, observability_1.withControllerLogging)('setCookie', setCookie),
+    getDownloadQQMusic: (0, observability_1.withControllerLogging)('getDownloadQQMusic', getDownloadQQMusic_1.default),
+    getHotKey: (0, observability_1.withControllerLogging)('getHotKey', getHotkey_1.default),
+    getSearchByKey: (0, observability_1.withControllerLogging)('getSearchByKey', getSearchByKey_1.default),
+    getSmartbox: (0, observability_1.withControllerLogging)('getSmartbox', getSmartbox_1.default),
+    getSongListCategories: (0, observability_1.withControllerLogging)('getSongListCategories', getSongListCategories_1.default),
+    getSongLists: (0, observability_1.withControllerLogging)('getSongLists', getSongLists_1.default),
+    batchGetSongLists: (0, observability_1.withControllerLogging)('batchGetSongLists', batchGetSongLists_1.default),
+    getSongInfo: (0, observability_1.withControllerLogging)('getSongInfo', getSongInfo_1.default),
+    batchGetSongInfo: (0, observability_1.withControllerLogging)('batchGetSongInfo', batchGetSongInfo_1.default),
+    getSongListDetail: (0, observability_1.withControllerLogging)('getSongListDetail', getSongListDetail_1.default),
+    getNewDisks: (0, observability_1.withControllerLogging)('getNewDisks', getNewDisks_1.default),
+    getMvByTag: (0, observability_1.withControllerLogging)('getMvByTag', getMvByTag_1.default),
+    getMv: (0, observability_1.withControllerLogging)('getMv', getMv_1.default),
+    getSingerList: (0, observability_1.withControllerLogging)('getSingerList', getSingerList_1.default),
+    getSimilarSinger: (0, observability_1.withControllerLogging)('getSimilarSinger', getSimilarSinger_1.default),
+    getSingerAlbum: (0, observability_1.withControllerLogging)('getSingerAlbum', getSingerAlbum_1.default),
+    getSingerHotsong: (0, observability_1.withControllerLogging)('getSingerHotsong', getSingerHotsong_1.default),
+    getSingerMv: (0, observability_1.withControllerLogging)('getSingerMv', getSingerMv_1.default),
+    getSingerDesc: (0, observability_1.withControllerLogging)('getSingerDesc', getSingerDesc_1.default),
+    getSingerStarNum: (0, observability_1.withControllerLogging)('getSingerStarNum', getSingerStarNum_1.default),
+    getRadioLists: (0, observability_1.withControllerLogging)('getRadioLists', getRadioLists_1.default),
+    getRadioTrack: (0, observability_1.withControllerLogging)('getRadioTrack', getRadioTrack_1.default),
+    radioDislike: (0, observability_1.withControllerLogging)('radioDislike', radioDislike_1.default),
+    setFav: (0, observability_1.withControllerLogging)('setFav', setFav_1.default),
+    getIsSongFan: (0, observability_1.withControllerLogging)('getIsSongFan', getIsSongFan_1.default),
+    getDigitalAlbumLists: (0, observability_1.withControllerLogging)('getDigitalAlbumLists', getDigitalAlbumLists_1.default),
+    getLyric: (0, observability_1.withControllerLogging)('getLyric', getLyric_1.default),
+    getMusicPlay: (0, observability_1.withControllerLogging)('getMusicPlay', getMusicPlay_1.default),
+    getAlbumInfo: (0, observability_1.withControllerLogging)('getAlbumInfo', getAlbumInfo_1.default),
+    getComments: (0, observability_1.withControllerLogging)('getComments', getComments_1.default),
+    getDailyPlaylist: (0, observability_1.withControllerLogging)('getDailyPlaylist', getDailyPlaylist_1.default),
+    getRecommend: (0, observability_1.withControllerLogging)('getRecommend', getRecommend_1.default),
+    getMvPlay: (0, observability_1.withControllerLogging)('getMvPlay', getMvPlay_1.default),
+    getTopLists: (0, observability_1.withControllerLogging)('getTopLists', getTopLists_1.default),
+    getRanks: (0, observability_1.withControllerLogging)('getRanks', getRanks_1.default),
+    getTicketInfo: (0, observability_1.withControllerLogging)('getTicketInfo', getTicketInfo_1.default),
+    getImageUrl: (0, observability_1.withControllerLogging)('getImageUrl', getImageUrl_1.default),
+    getUserProfile: (0, observability_1.withControllerLogging)('getUserProfile', getUserProfile_1.default),
+    getUserFavDiss: (0, observability_1.withControllerLogging)('getUserFavDiss', getUserFavDiss_1.default),
+    getRelationList: (0, observability_1.withControllerLogging)('getRelationList', getRelationList_1.default),
+};

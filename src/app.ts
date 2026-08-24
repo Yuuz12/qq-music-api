@@ -51,20 +51,25 @@ if (!userInfo.cookie) {
 }
 
 if (!isTestEnv) {
-  const versionCheckProcess = exec('npm info qq-music-api version', (err, stdout) => {
-    if (!err) {
-      const version = stdout.trim();
-      if (pkg.version < version) {
-        logger.info(
-          chalk.white(
-            `Current Version: ${version}, Local Version: ${pkg.version}, Please update it.`,
-          ),
-        );
+  // 本播放器项目适配：try/catch 防止 exec 失败（如无 npm 环境/沙箱限制）导致服务启动崩溃
+  try {
+    const versionCheckProcess = exec('npm info qq-music-api version', (err, stdout) => {
+      if (!err) {
+        const version = stdout.trim();
+        if (pkg.version < version) {
+          logger.info(
+            chalk.white(
+              `Current Version: ${version}, Local Version: ${pkg.version}, Please update it.`,
+            ),
+          );
+        }
       }
-    }
-  });
+    });
 
-  versionCheckProcess.unref();
+    versionCheckProcess.unref();
+  } catch (e) {
+    logger.warn('version check skipped:', String(e));
+  }
 }
 
 app.use(bodyParser());
@@ -160,8 +165,10 @@ app.use(async (ctx: Koa.Context, next: Koa.Next) => {
 app.use(router.routes()).use(router.allowedMethods());
 
 if (!isTestEnv) {
-  app.listen(serverConfig.port, () => {
-    logger.info(chalk.white(`server running @ http://localhost:${serverConfig.port}`));
+  // 本播放器项目适配（2026-08）：API 仅监听 127.0.0.1（内部服务），
+  // 对外统一走 8080 的 /api 反向代理（server.mjs），避免多端口暴露。
+  app.listen(serverConfig.port, '127.0.0.1', () => {
+    logger.info(chalk.white(`server running @ http://127.0.0.1:${serverConfig.port}`));
     autoOpenExplorer(serverConfig.port);
   });
 }

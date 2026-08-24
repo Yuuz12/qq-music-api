@@ -6,10 +6,11 @@ const { UCommon } = services;
 // songmid=001yNIo41SJjuC,001wPuVc4ZiMhj
 import { Context } from 'koa';
 import get from 'lodash.get';
-import { _guid, userInfo } from '../config';
+import { _guid } from '../config';
+import { getRequestCookie, getRequestUin } from '../util/requestCredential';
 
 export default async (ctx: Context) => {
-  const uin = userInfo.uin || '0';
+  const uin = getRequestUin();
   const songmid = `${(ctx.query as Record<string, unknown>).songmid}`;
   // response data only need play url value (all play)
   const justPlayUrl = ((ctx.query as Record<string, unknown>).resType || 'play') === 'play';
@@ -40,7 +41,10 @@ export default async (ctx: Context) => {
   const songmidList = songmid.split(',');
   const qualityKey = quality as keyof typeof fileType;
   const fileInfo = fileType[qualityKey];
-  const file = songmidList.map((_) => `${fileInfo.s}${_}${mediaId || _}${fileInfo.e}`);
+  // 本播放器项目适配（2026-08）：filename 应形如 M500{songmid}.mp3。
+  // 上游原写法 `${s}${_}${mediaId || _}${e}` 在未传 mediaId 时会重复 songmid
+  // （M500{songmid}{songmid}.mp3），上游 vkey 接口查不到文件导致 purl 恒为空。
+  const file = songmidList.map((_) => `${fileInfo.s}${mediaId || _}${fileInfo.e}`);
   const data = {
     // req: {
     // 	module: 'CDN.SrfCdnDispatchServer',
@@ -80,7 +84,13 @@ export default async (ctx: Context) => {
   const props = {
     method: 'get',
     params,
-    option: {},
+    // 本播放器项目适配（2026-08）：u_common 不携带用户 cookie，
+    // 上游 vkey 接口即使免费歌曲也要求登录 cookie 才返回 purl（未带 cookie 时 purl 恒为空）。
+    option: {
+      headers: {
+        Cookie: getRequestCookie(),
+      },
+    },
   };
 
   if (songmid) {

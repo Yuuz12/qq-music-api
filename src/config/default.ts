@@ -1,6 +1,14 @@
 import { AppConfig } from './schema';
 
-const defaultCookie: string = '';
+/**
+ * cookie 配置（本播放器项目适配）：
+ * 优先从环境变量读取（推荐，避免 cookie 入库），可写入 api/.env：
+ *   QQ_MUSIC_COOKIE=xxx
+ *   QQ_MUSIC_UIN=1234567890
+ * 或直接填在下方 defaultCookie。
+ */
+const defaultCookie: string = process.env.QQ_MUSIC_COOKIE || '';
+const defaultLoginUin: string = process.env.QQ_MUSIC_UIN || '';
 const cookieList: string[] = defaultCookie ? defaultCookie.split('; ') : [];
 const cookieObject: Record<string, string> = {};
 
@@ -21,7 +29,13 @@ export const defaultConfig: Partial<AppConfig> = {
       maxAge: 5,
       credentials: false,
       allowMethods: ['GET', 'POST', 'DELETE'],
-      allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+      allowHeaders: [
+        'Content-Type',
+        'Authorization',
+        'Accept',
+        'X-QQ-Music-Cookie',
+        'X-QQ-Music-Uin',
+      ],
     },
   },
   request: {
@@ -65,7 +79,7 @@ export const defaultConfig: Partial<AppConfig> = {
     },
   },
   user: {
-    loginUin: '',
+    loginUin: defaultLoginUin,
     cookie: defaultCookie,
     uin: cookieObject.uin || '',
     cookieList,

@@ -761,6 +761,84 @@ const userInfo = {
 
 ![获取电台列表](https://raw.githubusercontent.com/Rain120/qq-music-api/master/screenshot/getRadioLists.png)
 
+### 添加/取消喜欢（猜你喜欢页「喜欢」按钮）
+
+接口说明: 调用此接口, 可把歌曲添加/移除到「我喜欢」等收藏歌单。逆向自 QQ 音乐 Web 端 player_radio 页面（`music.musicasset.PlaylistDetailWrite`）。`isFan=false` 时调用 `AddSonglist`（添加喜欢），`isFan=true` 时调用 `DelSonglist`（取消喜欢）。需要登录态 cookie（配置 `QQ_MUSIC_COOKIE`）。
+
+参数列表:
+
+- 必选参数
+
+	- `songs`: 歌曲列表, 元素为 `{ songId, songType? }`
+
+- 可选参数
+
+	- `dirId`: 目标收藏列表 id, 默认 `201`（我喜欢）
+
+	- `isFan`: 当前是否已喜欢, 默认 `false`
+
+接口地址: `/setFav`
+
+调用例子: `/setFav`
+
+```body
+{
+  "dirId": 201,
+  "songs": [
+    { "songId": 1459873321, "songType": 0 }
+  ],
+  "isFan": false
+}
+```
+
+### 批量查询歌曲喜欢状态（红心）
+
+接口说明: 调用此接口, 可批量查询歌曲是否已喜欢（红心高亮）。逆向自 QQ 音乐 Web 端（`music.musicasset.SongFavRead / IsSongFanByMid`），响应 `data.m_fan = { [songmid]: 1 | 0 }`。需要登录态 cookie。
+
+参数列表:
+
+- 必选参数
+
+	- `songmids`: 歌曲 mid 列表
+
+接口地址: `/getIsSongFan`
+
+调用例子: `/getIsSongFan`
+
+```body
+{
+  "songmids": ["003rJSwm3TechU"]
+}
+```
+
+### 电台「删除」按钮（暂时不再播放）
+
+接口说明: 还原 QQ 音乐 Web 端 player_radio 页「删除」按钮的实际行为——网页端只向 `stat.pc.music.qq.com` 发送一条统计上报（`fcg_val_report.fcg`，`method=0`、`data2=15`），真正的「该歌曲将暂时不再播放」是在浏览器本地把歌曲从播放队列剔除并切歌。本接口仅复刻统计上报（失败不影响业务，`reported=false`），调用方仍需在前端本地移除歌曲。
+
+参数列表:
+
+- 必选参数
+
+	- `songId`: 歌曲数字 id
+
+- 可选参数
+
+	- `radioId`: 电台 id, 默认 `99`（猜你喜欢）
+
+	- `songType`: 歌曲类型, 默认 `0`
+
+接口地址: `/radioDislike`
+
+调用例子: `/radioDislike`
+
+```body
+{
+  "radioId": 99,
+  "songId": 1459873321,
+  "songType": 0
+}
+```
+
 ### 获取专辑
 
 接口说明: 调用此接口, 可获取专辑信息(专辑列表、详情)

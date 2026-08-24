@@ -69,6 +69,18 @@ router.get('/getSingerStarNum/:singermid?', context.getSingerStarNum);
 // radio
 router.get('/getRadioLists', context.getRadioLists);
 
+// radio track / 猜你喜欢（id=99）
+router.get('/getRadioTrack/:id?/:num?/:firstplay?', context.getRadioTrack);
+
+// fav（猜你喜欢页「喜欢」按钮：添加/取消喜欢到「我喜欢」列表）
+router.post('/setFav', context.setFav);
+
+// fav（批量查询歌曲喜欢状态，红心高亮）
+router.post('/getIsSongFan', context.getIsSongFan);
+
+// radio dislike（猜你喜欢页「删除」按钮：网页端仅统计上报，实际剔除歌曲在客户端本地完成）
+router.post('/radioDislike', context.radioDislike);
+
 // DigitalAlbum
 router.get('/getDigitalAlbumLists', context.getDigitalAlbumLists);
 
@@ -92,6 +104,9 @@ router.get(
 // recommend
 router.get('/getRecommend', context.getRecommend);
 
+// daily playlist（每日30首/今日私享 disstid，需登录 cookie）
+router.get('/getDailyPlaylist', context.getDailyPlaylist);
+
 // mv play
 router.get('/getMvPlay/:vid?', context.getMvPlay);
 
@@ -106,5 +121,14 @@ router.get('/getTicketInfo', context.getTicketInfo);
 
 // getImageUrl
 router.get('/getImageUrl', context.getImageUrl);
+
+// user profile（个人主页聚合：昵称/头像/粉丝/关注/我喜欢/创建的歌单）
+router.get('/getUserProfile', context.getUserProfile);
+
+// user fav diss（收藏歌单列表，需登录 cookie）
+router.get('/getUserFavDiss', context.getUserFavDiss);
+
+// relation list（关注歌手/关注用户/粉丝列表，需登录 cookie）
+router.get('/getRelationList', context.getRelationList);
 
 export default router;

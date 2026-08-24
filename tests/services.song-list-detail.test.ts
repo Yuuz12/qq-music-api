@@ -40,7 +40,7 @@ describe('services/songListDetail', () => {
     });
 
     expect(mockYCommon).toHaveBeenCalledWith({
-      url: '/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
+      url: '/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
       method: 'get',
       options: {
         params: {

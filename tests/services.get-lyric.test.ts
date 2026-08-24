@@ -1,13 +1,21 @@
-const mockYCommon = jest.fn();
+const mockAxiosPost = jest.fn();
+const mockQrcDecryptHex = jest.fn();
+const mockQrcXmlToLrc = jest.fn();
+const mockQrcXmlToWordData = jest.fn();
 const mockLyricParse = jest.fn();
-const mockMomentValueOf = jest.fn(() => 1710000000000);
-const mockMoment = jest.fn(() => ({
-  valueOf: mockMomentValueOf,
+
+jest.mock('axios', () => ({
+  __esModule: true,
+  default: {
+    post: mockAxiosPost,
+  },
 }));
 
-jest.mock('../src/services/y_common', () => ({
+jest.mock('../src/util/qrc', () => ({
   __esModule: true,
-  default: mockYCommon,
+  qrcDecryptHex: (...args: unknown[]) => mockQrcDecryptHex(...args),
+  qrcXmlToLrc: (...args: unknown[]) => mockQrcXmlToLrc(...args),
+  qrcXmlToWordData: (...args: unknown[]) => mockQrcXmlToWordData(...args),
 }));
 
 jest.mock('../src/util/logger', () => ({
@@ -27,62 +35,59 @@ jest.mock('../src/util/lyricParse', () => ({
   },
 }));
 
-jest.mock('moment', () => ({
-  __esModule: true,
-  default: mockMoment,
-}));
-
 import getLyric from '../src/services/music/getLyric';
 import { logger } from '../src/util/logger';
 
 const mockedLogger = logger as jest.Mocked<typeof logger>;
 
+/**
+ * 2026-08 更新：getLyric 服务已改为 musicu.fcg GetPlayLyricInfo（crypt:1，QRC 加密），
+ * 经 util/qrc 解密；本用例同步为当前实现（旧版 y_common/fcg_query_lyric_new.fcg 已废弃）。
+ */
 describe('services/getLyric', () => {
   beforeEach(() => {
-    mockYCommon.mockReset();
+    mockAxiosPost.mockReset();
+    mockQrcDecryptHex.mockReset();
+    mockQrcXmlToLrc.mockReset();
+    mockQrcXmlToWordData.mockReset();
     mockLyricParse.mockReset();
-    mockMoment.mockClear();
-    mockMomentValueOf.mockClear();
     jest.clearAllMocks();
   });
 
-  it('应在未格式化时返回解码后的歌词字符串', async () => {
-    const encodedLyric = Buffer.from('[00:01.00]hello').toString('base64');
-    mockYCommon.mockResolvedValue({
+  it('应在未格式化时返回解密后的歌词字符串', async () => {
+    // QRC 链路：上游 hex → qrcDecryptHex → QRC XML → qrcXmlToLrc → 行级 LRC
+    mockQrcDecryptHex.mockImplementation((hex: string) => `<xml>${hex}</xml>`);
+    mockQrcXmlToLrc.mockImplementation(
+      (xml: string) => `[00:01.00]${xml.replace(/<\/?xml>/g, '')}`,
+    );
+    mockAxiosPost.mockResolvedValue({
       data: {
-        code: 0,
-        lyric: encodedLyric,
-      },
-    });
-
-    const result = await getLyric({
-      params: {
-        songmid: '001',
-      },
-    });
-
-    expect(mockYCommon).toHaveBeenCalledWith({
-      url: '/lyric/fcgi-bin/fcg_query_lyric_new.fcg',
-      method: 'get',
-      options: {
-        params: {
-          songmid: '001',
-          format: 'json',
-          outCharset: 'utf-8',
-          pcachetime: 1710000000000,
-        },
-      },
-    });
-    expect(mockLyricParse).not.toHaveBeenCalled();
-    expect(result).toEqual({
-      status: 200,
-      body: {
-        response: {
+        req_1: {
           code: 0,
-          lyric: '[00:01.00]hello',
+          data: { lyric: 'HEX_LYRIC', trans: 'HEX_TRANS', roma: '' },
         },
       },
     });
+
+    const result = await getLyric({ params: { songmid: '001' } });
+
+    expect(mockAxiosPost).toHaveBeenCalledWith(
+      'https://u.y.qq.com/cgi-bin/musicu.fcg',
+      expect.objectContaining({
+        req_1: expect.objectContaining({
+          module: 'music.musichallSong.PlayLyricInfo',
+          method: 'GetPlayLyricInfo',
+          param: expect.objectContaining({ songMid: '001', crypt: 1 }),
+        }),
+      }),
+      expect.objectContaining({
+        headers: expect.objectContaining({ 'Content-Type': 'application/json' }),
+      }),
+    );
+    expect(mockLyricParse).not.toHaveBeenCalled();
+    expect(result.status).toBe(200);
+    const body = (result as { body: { response: Record<string, unknown> } }).body.response;
+    expect(body.lyric).toBe('[00:01.00]HEX_LYRIC');
     expect(mockedLogger.info).toHaveBeenCalledWith(
       'service.requesting',
       expect.objectContaining({
@@ -99,38 +104,32 @@ describe('services/getLyric', () => {
   });
 
   it('应在 isFormat=true 时调用 lyricParse 格式化歌词', async () => {
-    const encodedLyric = Buffer.from('[00:01.00]world').toString('base64');
     const parsedLyric = {
       lines: [{ time: 1000, txt: 'world' }],
     };
-
-    mockYCommon.mockResolvedValue({
+    mockQrcDecryptHex.mockReturnValue('<xml>HEX</xml>');
+    mockQrcXmlToWordData.mockReturnValue({ lrc: '[00:01.00]world', words: { 0: [] } });
+    mockQrcXmlToLrc.mockReturnValue('[00:01.00]world');
+    mockLyricParse.mockReturnValue(parsedLyric);
+    mockAxiosPost.mockResolvedValue({
       data: {
-        lyric: encodedLyric,
-        trans: 'ignored',
+        req_1: {
+          code: 0,
+          data: { lyric: 'HEX', trans: '', roma: '' },
+        },
       },
     });
-    mockLyricParse.mockReturnValue(parsedLyric);
 
     const result = await getLyric({
       isFormat: true,
-      options: {
-        headers: {
-          'x-req-id': '1',
-        },
-      },
+      params: { songmid: '002' },
     });
 
+    expect(mockQrcXmlToWordData).toHaveBeenCalledWith('<xml>HEX</xml>');
     expect(mockLyricParse).toHaveBeenCalledWith('[00:01.00]world');
-    expect(result).toEqual({
-      status: 200,
-      body: {
-        response: {
-          lyric: parsedLyric,
-          trans: 'ignored',
-        },
-      },
-    });
+    expect(result.status).toBe(200);
+    const body = (result as { body: { response: Record<string, unknown> } }).body.response;
+    expect(body.lyric).toEqual(parsedLyric);
     expect(mockedLogger.debug).toHaveBeenCalledWith(
       'service.branch_selected',
       expect.objectContaining({
@@ -141,30 +140,27 @@ describe('services/getLyric', () => {
   });
 
   it('应在歌词为空时以空字符串执行格式化', async () => {
-    mockYCommon.mockResolvedValue({
+    mockQrcXmlToLrc.mockReturnValue('');
+    mockLyricParse.mockReturnValue({ lines: [] });
+    mockAxiosPost.mockResolvedValue({
       data: {
-        code: 0,
-        lyric: '',
+        req_1: {
+          code: 0,
+          data: { lyric: '', trans: '', roma: '' },
+        },
       },
     });
-    mockLyricParse.mockReturnValue({ lines: [] });
 
-    await getLyric({
-      isFormat: true,
-    });
+    await getLyric({ isFormat: true, params: { songmid: '003' } });
 
     expect(mockLyricParse).toHaveBeenCalledWith('');
   });
 
   it('应在底层请求失败时返回 500', async () => {
     const error = new Error('lyric failed');
-    mockYCommon.mockRejectedValue(error);
+    mockAxiosPost.mockRejectedValue(error);
 
-    const result = await getLyric({
-      params: {
-        songmid: '002',
-      },
-    });
+    const result = await getLyric({ params: { songmid: '004' } });
 
     expect(result).toEqual({
       status: 500,
@@ -176,10 +172,6 @@ describe('services/getLyric', () => {
       'service.failed',
       expect.objectContaining({
         service: 'getLyric',
-        error: {
-          name: 'Error',
-          message: 'lyric failed',
-        },
       }),
     );
   });

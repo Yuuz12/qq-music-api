@@ -183,6 +183,23 @@ export const apiExplorerBaseRoutes: ApiExplorerBaseRoute[] = [
   },
   { name: 'getRadioLists', method: 'GET', routePath: '/getRadioLists', category: 'Radio' },
   {
+    name: 'getRadioTrack',
+    method: 'GET',
+    routePath: '/getRadioTrack/:id?/:num?/:firstplay?',
+    category: 'Radio',
+  },
+  { name: 'radioDislike', method: 'POST', routePath: '/radioDislike', category: 'Radio' },
+  { name: 'setFav', method: 'POST', routePath: '/setFav', category: 'Favorite' },
+  { name: 'getIsSongFan', method: 'POST', routePath: '/getIsSongFan', category: 'Favorite' },
+  { name: 'getUserProfile', method: 'GET', routePath: '/getUserProfile', category: 'User' },
+  { name: 'getUserFavDiss', method: 'GET', routePath: '/getUserFavDiss', category: 'User' },
+  {
+    name: 'getRelationList',
+    method: 'GET',
+    routePath: '/getRelationList',
+    category: 'User',
+  },
+  {
     name: 'getDigitalAlbumLists',
     method: 'GET',
     routePath: '/getDigitalAlbumLists',
@@ -214,6 +231,12 @@ export const apiExplorerBaseRoutes: ApiExplorerBaseRoute[] = [
     category: 'Common',
   },
   { name: 'getRecommend', method: 'GET', routePath: '/getRecommend', category: 'Recommend' },
+  {
+    name: 'getDailyPlaylist',
+    method: 'GET',
+    routePath: '/getDailyPlaylist',
+    category: 'Recommend',
+  },
   { name: 'getMvPlay', method: 'GET', routePath: '/getMvPlay/:vid?', category: 'MV' },
   { name: 'getTopLists', method: 'GET', routePath: '/getTopLists', category: 'Rank' },
   {
@@ -366,6 +389,138 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
   },
   getMvPlay: {
     description: 'Get MV playable stream URLs by video ID.',
+  },
+  getRadioTrack: {
+    id: 'get-radio-track',
+    description:
+      'Get radio track list. id=99 is 猜你喜欢 (private FM), other ids are category radio.',
+    queryParams: [
+      {
+        key: 'id',
+        label: 'Radio ID',
+        inputType: 'number',
+        placeholder: '99',
+        description: '99 = 猜你喜欢（私人FM），其他值为分类电台',
+        defaultValue: 99,
+      },
+      {
+        key: 'num',
+        label: 'Num',
+        inputType: 'number',
+        placeholder: '10',
+        description: 'Number of tracks.',
+        defaultValue: 10,
+      },
+      {
+        key: 'firstplay',
+        label: 'First Play',
+        inputType: 'boolean',
+        placeholder: '0',
+        description: '1 for first play.',
+        defaultValue: 0,
+      },
+    ],
+  },
+  radioDislike: {
+    id: 'radio-dislike',
+    description:
+      'Radio delete button: mirrors the web stat report only (fcg_val_report.fcg). The real queue removal must be done client-side.',
+    bodyDescription: 'JSON body with radioId, songId and songType.',
+    bodyExample: {
+      radioId: 99,
+      songId: 1459873321,
+      songType: 0,
+    },
+  },
+  setFav: {
+    id: 'set-fav',
+    description:
+      'Add/remove favorite songs (猜你喜欢 like button). dirId=201 is 我喜欢. isFan=true removes (DelSonglist), false adds (AddSonglist).',
+    bodyDescription: 'JSON body with dirId, songs and current isFan state.',
+    bodyExample: {
+      dirId: 201,
+      songs: [
+        {
+          songId: 1459873321,
+          songType: 0,
+        },
+      ],
+      isFan: false,
+    },
+  },
+  getIsSongFan: {
+    id: 'get-is-song-fan',
+    description:
+      'Batch check favorite state (red heart) by song mids via music.musicasset.SongFavRead.',
+    bodyDescription: 'JSON body with songmids array.',
+    bodyExample: {
+      songmids: ['003rJSwm3TechU'],
+    },
+  },
+  getUserProfile: {
+    id: 'get-user-profile',
+    description:
+      'Get user profile aggregation: nick/avatar/fans/following/我喜欢/custom playlists.',
+  },
+  getUserFavDiss: {
+    id: 'get-user-fav-diss',
+    description:
+      'Get user collected playlists (收藏歌单): same item shape as getUserProfile.disslist.',
+    queryParams: [
+      {
+        key: 'sin',
+        label: 'Start offset',
+        inputType: 'number',
+        required: false,
+        defaultValue: 0,
+        description: 'Start offset (default 0)',
+      },
+      {
+        key: 'num',
+        label: 'Page size',
+        inputType: 'number',
+        required: false,
+        defaultValue: 100,
+        description: 'Page size (default 100, max 200)',
+      },
+    ],
+  },
+  getRelationList: {
+    id: 'get-relation-list',
+    description:
+      'Get user relation list (关注歌手/关注用户/粉丝) via music.concern.RelationList. hostUin empty = current login user. Requires cookie.',
+    queryParams: [
+      {
+        key: 'type',
+        label: 'Type',
+        required: false,
+        placeholder: 'fans',
+        description: 'follow_singer = 关注的歌手, follow_user = 关注的用户, fans = 粉丝.',
+        defaultValue: 'fans',
+      },
+      {
+        key: 'from',
+        label: 'From',
+        inputType: 'number',
+        required: false,
+        defaultValue: 0,
+        description: 'Start offset (default 0)',
+      },
+      {
+        key: 'size',
+        label: 'Size',
+        inputType: 'number',
+        required: false,
+        defaultValue: 30,
+        description: 'Page size (default 30, max 100)',
+      },
+      {
+        key: 'hostUin',
+        label: 'Host EncUin',
+        required: false,
+        description: 'Target user encrypt uin; empty = self.',
+      },
+    ],
   },
 };
 
