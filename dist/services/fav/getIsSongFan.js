@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const requestCredential_1 = require("../../util/requestCredential");
 const observability_1 = require("../../util/observability");
+const requestCredential_1 = require("../../util/requestCredential");
 /** 单次请求的 mid 数上限（100 个 ≈ 查询串 2.5KB，远低于上游 URI 限制） */
 const BATCH_SIZE = 100;
 const UPSTREAM_URL = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
@@ -101,7 +101,10 @@ exports.default = async ({ songmids = [] } = {}) => {
             data: { m_fan },
         },
     };
-    (0, observability_1.logServiceSuccess)('getIsSongFan', UPSTREAM_URL, { code: response.code, fans: Object.keys(m_fan).length });
+    (0, observability_1.logServiceSuccess)('getIsSongFan', UPSTREAM_URL, {
+        code: response.code,
+        fans: Object.keys(m_fan).length,
+    });
     return {
         status: 200,
         body: { response },

@@ -435,7 +435,7 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
   setFav: {
     id: 'set-fav',
     description:
-      'Add/remove favorite songs (猜你喜欢 like button). dirId=201 is 我喜欢. isFan=true removes (DelSonglist), false adds (AddSonglist).',
+      'Add/remove favorite songs or add songs to a user playlist. dirId=201 is 我喜欢; for 自建歌单 use the internal dirId from getUserProfile.disslist[].dirId (NOT dissid, which returns 80092). isFan=true removes (DelSonglist), false adds (AddSonglist).',
     bodyDescription: 'JSON body with dirId, songs and current isFan state.',
     bodyExample: {
       dirId: 201,

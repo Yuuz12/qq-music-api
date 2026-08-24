@@ -9,7 +9,7 @@ const logger_1 = require("../../util/logger");
 const requestCredential_1 = require("../../util/requestCredential");
 exports.DEFAULT_FAV_DIR_ID = 201;
 const PROXY_URL = process.env.PROXY_URL || 'http://localhost:9339';
-exports.default = async ({ dirId = exports.DEFAULT_FAV_DIR_ID, songs = [], isFan = false } = {}) => {
+exports.default = async ({ dirId = exports.DEFAULT_FAV_DIR_ID, songs = [], isFan = false, } = {}) => {
     const v_songInfo = songs.map(({ songId, songType = 0 }) => ({
         songId,
         songType: Number(songType) || 0,

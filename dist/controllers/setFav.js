@@ -26,7 +26,7 @@ exports.default = async (ctx) => {
     });
     // 统一响应：把 musicu.fcg 的 req_0 数据提升到 response.data
     const resp = result.response;
-    const upstream = (resp?.req_0 || resp?.[0]) || null;
+    const upstream = resp?.req_0 || resp?.[0] || null;
     ctx.status = status;
     ctx.body = {
         response: {

@@ -19,19 +19,60 @@ exports.qrcXmlToWordData = qrcXmlToWordData;
  */
 const node_zlib_1 = __importDefault(require("node:zlib"));
 const SBOX = [
-    [14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7, 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8, 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0, 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13],
-    [15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10, 3, 13, 4, 7, 15, 2, 8, 15, 12, 0, 1, 10, 6, 9, 11, 5, 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9],
-    [10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8, 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1, 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7, 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12],
-    [7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15, 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9, 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4, 3, 15, 0, 6, 10, 10, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14],
-    [2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9, 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6, 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14, 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3],
-    [12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11, 10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8, 9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6, 4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13],
-    [4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1, 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6, 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2, 6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12],
-    [13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7, 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2, 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8, 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11],
+    [
+        14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7, 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11,
+        9, 5, 3, 8, 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0, 15, 12, 8, 2, 4, 9, 1, 7, 5,
+        11, 3, 14, 10, 0, 6, 13,
+    ],
+    [
+        15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10, 3, 13, 4, 7, 15, 2, 8, 15, 12, 0, 1, 10,
+        6, 9, 11, 5, 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, 13, 8, 10, 1, 3, 15, 4, 2,
+        11, 6, 7, 12, 0, 5, 14, 9,
+    ],
+    [
+        10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8, 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12,
+        11, 15, 1, 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7, 1, 10, 13, 0, 6, 9, 8, 7, 4,
+        15, 14, 3, 11, 5, 2, 12,
+    ],
+    [
+        7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15, 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1,
+        10, 14, 9, 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4, 3, 15, 0, 6, 10, 10, 13, 8, 9,
+        4, 5, 11, 12, 7, 2, 14,
+    ],
+    [
+        2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9, 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10,
+        3, 9, 8, 6, 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14, 11, 8, 12, 7, 1, 14, 2, 13, 6,
+        15, 0, 9, 10, 4, 5, 3,
+    ],
+    [
+        12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11, 10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14,
+        0, 11, 3, 8, 9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6, 4, 3, 2, 12, 9, 5, 15, 10,
+        11, 14, 1, 7, 6, 0, 8, 13,
+    ],
+    [
+        4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1, 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12,
+        2, 15, 8, 6, 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2, 6, 11, 13, 8, 1, 4, 10, 7, 9,
+        5, 0, 15, 14, 2, 3, 12,
+    ],
+    [
+        13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7, 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11,
+        0, 14, 9, 2, 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8, 2, 1, 14, 7, 4, 10, 8, 13,
+        15, 12, 9, 0, 3, 5, 6, 11,
+    ],
 ];
 const KEY_RND_SHIFT = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1];
-const KEY_PERM_C = [56, 48, 40, 32, 24, 16, 8, 0, 57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35];
-const KEY_PERM_D = [62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 60, 52, 44, 36, 28, 20, 12, 4, 27, 19, 11, 3];
-const KEY_COMPRESSION = [13, 16, 10, 23, 0, 4, 2, 27, 14, 5, 20, 9, 22, 18, 11, 3, 25, 7, 15, 6, 26, 19, 12, 1, 40, 51, 30, 36, 46, 54, 29, 39, 50, 44, 32, 47, 43, 48, 38, 55, 33, 52, 45, 41, 49, 35, 28, 31];
+const KEY_PERM_C = [
+    56, 48, 40, 32, 24, 16, 8, 0, 57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51,
+    43, 35,
+];
+const KEY_PERM_D = [
+    62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 60, 52, 44, 36, 28, 20, 12, 4, 27,
+    19, 11, 3,
+];
+const KEY_COMPRESSION = [
+    13, 16, 10, 23, 0, 4, 2, 27, 14, 5, 20, 9, 22, 18, 11, 3, 25, 7, 15, 6, 26, 19, 12, 1, 40, 51, 30,
+    36, 46, 54, 29, 39, 50, 44, 32, 47, 43, 48, 38, 55, 33, 52, 45, 41, 49, 35, 28, 31,
+];
 const KEY1 = Buffer.from('!@#)(NHL');
 const KEY2 = Buffer.from('123ZXC!@');
 const KEY3 = Buffer.from('!@#)(*$%');
@@ -61,8 +102,14 @@ function initialPermutation(inputData) {
         return v >>> 0;
     };
     return [
-        p([57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7]),
-        p([56, 48, 40, 32, 24, 16, 8, 0, 58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6]),
+        p([
+            57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5,
+            63, 55, 47, 39, 31, 23, 15, 7,
+        ]),
+        p([
+            56, 48, 40, 32, 24, 16, 8, 0, 58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
+            62, 54, 46, 38, 30, 22, 14, 6,
+        ]),
     ];
 }
 function inversePermutation(s0, s1) {
@@ -86,15 +133,37 @@ function inversePermutation(s0, s1) {
 }
 /** DES 轮函数（E 扩展 → 与子钥异或 → 魔改 S 盒 → P 置换） */
 function fRound(state, key) {
-    const t1 = bitNumIntL(state, 31, 0) | ((state & 0xf0000000) >>> 1) | bitNumIntL(state, 4, 5) | bitNumIntL(state, 3, 6) |
-        ((state & 0x0f000000) >>> 3) | bitNumIntL(state, 8, 11) | bitNumIntL(state, 7, 12) | ((state & 0x00f00000) >>> 5) |
-        bitNumIntL(state, 12, 17) | bitNumIntL(state, 11, 18) | ((state & 0x000f0000) >>> 7) | bitNumIntL(state, 16, 23);
-    const t2 = bitNumIntL(state, 15, 0) | ((state & 0x0000f000) << 15) | bitNumIntL(state, 20, 5) | bitNumIntL(state, 19, 6) |
-        ((state & 0x00000f00) << 13) | bitNumIntL(state, 24, 11) | bitNumIntL(state, 23, 12) | ((state & 0x000000f0) << 11) |
-        bitNumIntL(state, 28, 17) | bitNumIntL(state, 27, 18) | ((state & 0x0000000f) << 9) | bitNumIntL(state, 0, 23);
+    const t1 = bitNumIntL(state, 31, 0) |
+        ((state & 0xf0000000) >>> 1) |
+        bitNumIntL(state, 4, 5) |
+        bitNumIntL(state, 3, 6) |
+        ((state & 0x0f000000) >>> 3) |
+        bitNumIntL(state, 8, 11) |
+        bitNumIntL(state, 7, 12) |
+        ((state & 0x00f00000) >>> 5) |
+        bitNumIntL(state, 12, 17) |
+        bitNumIntL(state, 11, 18) |
+        ((state & 0x000f0000) >>> 7) |
+        bitNumIntL(state, 16, 23);
+    const t2 = bitNumIntL(state, 15, 0) |
+        ((state & 0x0000f000) << 15) |
+        bitNumIntL(state, 20, 5) |
+        bitNumIntL(state, 19, 6) |
+        ((state & 0x00000f00) << 13) |
+        bitNumIntL(state, 24, 11) |
+        bitNumIntL(state, 23, 12) |
+        ((state & 0x000000f0) << 11) |
+        bitNumIntL(state, 28, 17) |
+        bitNumIntL(state, 27, 18) |
+        ((state & 0x0000000f) << 9) |
+        bitNumIntL(state, 0, 23);
     const lrg = [
-        (t1 >>> 24) & 0xff, (t1 >>> 16) & 0xff, (t1 >>> 8) & 0xff,
-        (t2 >>> 24) & 0xff, (t2 >>> 16) & 0xff, (t2 >>> 8) & 0xff,
+        (t1 >>> 24) & 0xff,
+        (t1 >>> 16) & 0xff,
+        (t1 >>> 8) & 0xff,
+        (t2 >>> 24) & 0xff,
+        (t2 >>> 16) & 0xff,
+        (t2 >>> 8) & 0xff,
     ].map((v, i) => v ^ key[i]);
     let out = (SBOX[0][sBoxBit(lrg[0] >> 2)] << 28) |
         (SBOX[1][sBoxBit(((lrg[0] & 0x03) << 4) | (lrg[1] >> 4))] << 24) |
@@ -105,14 +174,39 @@ function fRound(state, key) {
         (SBOX[6][sBoxBit(((lrg[4] & 0x0f) << 2) | (lrg[5] >> 6))] << 4) |
         SBOX[7][sBoxBit(lrg[5] & 0x3f)];
     out =
-        (bitNumIntL(out, 15, 0) | bitNumIntL(out, 6, 1) | bitNumIntL(out, 19, 2) | bitNumIntL(out, 20, 3) |
-            bitNumIntL(out, 28, 4) | bitNumIntL(out, 11, 5) | bitNumIntL(out, 27, 6) | bitNumIntL(out, 16, 7) |
-            bitNumIntL(out, 0, 8) | bitNumIntL(out, 14, 9) | bitNumIntL(out, 22, 10) | bitNumIntL(out, 25, 11) |
-            bitNumIntL(out, 4, 12) | bitNumIntL(out, 17, 13) | bitNumIntL(out, 30, 14) | bitNumIntL(out, 9, 15) |
-            bitNumIntL(out, 1, 16) | bitNumIntL(out, 7, 17) | bitNumIntL(out, 23, 18) | bitNumIntL(out, 13, 19) |
-            bitNumIntL(out, 31, 20) | bitNumIntL(out, 26, 21) | bitNumIntL(out, 2, 22) | bitNumIntL(out, 8, 23) |
-            bitNumIntL(out, 18, 24) | bitNumIntL(out, 12, 25) | bitNumIntL(out, 29, 26) | bitNumIntL(out, 5, 27) |
-            bitNumIntL(out, 21, 28) | bitNumIntL(out, 10, 29) | bitNumIntL(out, 3, 30) | bitNumIntL(out, 24, 31)) >>> 0;
+        (bitNumIntL(out, 15, 0) |
+            bitNumIntL(out, 6, 1) |
+            bitNumIntL(out, 19, 2) |
+            bitNumIntL(out, 20, 3) |
+            bitNumIntL(out, 28, 4) |
+            bitNumIntL(out, 11, 5) |
+            bitNumIntL(out, 27, 6) |
+            bitNumIntL(out, 16, 7) |
+            bitNumIntL(out, 0, 8) |
+            bitNumIntL(out, 14, 9) |
+            bitNumIntL(out, 22, 10) |
+            bitNumIntL(out, 25, 11) |
+            bitNumIntL(out, 4, 12) |
+            bitNumIntL(out, 17, 13) |
+            bitNumIntL(out, 30, 14) |
+            bitNumIntL(out, 9, 15) |
+            bitNumIntL(out, 1, 16) |
+            bitNumIntL(out, 7, 17) |
+            bitNumIntL(out, 23, 18) |
+            bitNumIntL(out, 13, 19) |
+            bitNumIntL(out, 31, 20) |
+            bitNumIntL(out, 26, 21) |
+            bitNumIntL(out, 2, 22) |
+            bitNumIntL(out, 8, 23) |
+            bitNumIntL(out, 18, 24) |
+            bitNumIntL(out, 12, 25) |
+            bitNumIntL(out, 29, 26) |
+            bitNumIntL(out, 5, 27) |
+            bitNumIntL(out, 21, 28) |
+            bitNumIntL(out, 10, 29) |
+            bitNumIntL(out, 3, 30) |
+            bitNumIntL(out, 24, 31)) >>>
+            0;
     return out;
 }
 function keySchedule(key8, decrypt) {
@@ -204,7 +298,10 @@ function qrcXmlToLrc(xml) {
         const t = raw.match(/^\[(\d+),\d+\]/);
         if (!t)
             continue;
-        const text = raw.replace(/\[(\d+),\d+\]/, '').replace(/\(\d+,\d+\)/g, '').trim();
+        const text = raw
+            .replace(/\[(\d+),\d+\]/, '')
+            .replace(/\(\d+,\d+\)/g, '')
+            .trim();
         lines.push(msFormat(Number(t[1])) + text);
     }
     return lines.join('\n');
@@ -230,7 +327,10 @@ function qrcXmlToWordData(xml) {
         const rowStart = Number(t[1]);
         const rowEnd = rowStart + Number(t[2]);
         const body = raw.replace(/\[(\d+),\d+\]/, '').trim();
-        const plain = body.replace(/\(\d+,\d+\)/g, '').replace(/\s+/g, ' ').trim();
+        const plain = body
+            .replace(/\(\d+,\d+\)/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
         lines.push(msFormat(rowStart) + plain);
         // 逐字：QRC 行体 = 逐词文本 + (起始,时长) 标记交替配对，行首无独立前导文本——
         // 如 "词(2250,450)：(2700,450)周…" 中 "词" 就是第一个词（第一个标记即它的时间）
@@ -247,10 +347,14 @@ function qrcXmlToWordData(xml) {
             const raw = spans[i].text;
             if (raw === '')
                 continue; // 空串词丢弃；纯空格词保留（词间空格可见）
-            const end = i + 1 < spans.length ? Math.min(spans[i + 1].start, spans[i].start + spans[i].dur) : Math.min(rowEnd - rowStart, spans[i].start + spans[i].dur);
+            const end = i + 1 < spans.length
+                ? Math.min(spans[i + 1].start, spans[i].start + spans[i].dur)
+                : Math.min(rowEnd - rowStart, spans[i].start + spans[i].dur);
             words.push({ text: raw, start: spans[i].start, end });
         }
-        out[String(rowStart)] = words.length ? words : [{ text: plain, start: 0, end: rowEnd - rowStart }];
+        out[String(rowStart)] = words.length
+            ? words
+            : [{ text: plain, start: 0, end: rowEnd - rowStart }];
     }
     return { lrc: lines.join('\n'), words: out };
 }

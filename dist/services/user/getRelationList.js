@@ -5,15 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isRelationListType = exports.RELATION_METHODS = void 0;
 const axios_1 = __importDefault(require("axios"));
-const requestCredential_1 = require("../../util/requestCredential");
 const observability_1 = require("../../util/observability");
+const requestCredential_1 = require("../../util/requestCredential");
 /** 友好类型 → 上游 musicu.fcg 方法名 */
 exports.RELATION_METHODS = {
     follow_singer: 'GetFollowSingerList',
     follow_user: 'GetFollowUserList',
     fans: 'GetFansList',
 };
-const isRelationListType = (value) => Object.prototype.hasOwnProperty.call(exports.RELATION_METHODS, value);
+const isRelationListType = (value) => Object.hasOwn(exports.RELATION_METHODS, value);
 exports.isRelationListType = isRelationListType;
 const UPSTREAM_URL = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
 exports.default = async ({ type = 'fans', from = 0, size = 30, hostUin = '', } = {}) => {
@@ -49,7 +49,10 @@ exports.default = async ({ type = 'fans', from = 0, size = 30, hostUin = '', } =
             },
             timeout: 10000,
         });
-        const req0 = res.data && typeof res.data === 'object' && res.data.req_0 && typeof res.data.req_0 === 'object'
+        const req0 = res.data &&
+            typeof res.data === 'object' &&
+            res.data.req_0 &&
+            typeof res.data.req_0 === 'object'
             ? res.data.req_0
             : undefined;
         const code = req0?.code ?? res.data?.code ?? -1;

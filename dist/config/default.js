@@ -28,7 +28,13 @@ exports.defaultConfig = {
             maxAge: 5,
             credentials: false,
             allowMethods: ['GET', 'POST', 'DELETE'],
-            allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-QQ-Music-Cookie', 'X-QQ-Music-Uin'],
+            allowHeaders: [
+                'Content-Type',
+                'Authorization',
+                'Accept',
+                'X-QQ-Music-Cookie',
+                'X-QQ-Music-Uin',
+            ],
         },
     },
     request: {

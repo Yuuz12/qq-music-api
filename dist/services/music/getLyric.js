@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const lyricParse_1 = __importDefault(require("../../util/lyricParse"));
-const qrc_1 = require("../../util/qrc");
 const observability_1 = require("../../util/observability");
+const qrc_1 = require("../../util/qrc");
 /**
  * 2026-08 适配：老接口 /lyric/fcgi-bin/fcg_query_lyric_new.fcg 已不再返回翻译，
  * 改为官方 Web 端在用的 musicu.fcg GetPlayLyricInfo（crypt:1）。

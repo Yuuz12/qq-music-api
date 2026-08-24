@@ -40,8 +40,8 @@ const songLists_1 = __importDefault(require("./songLists/songLists"));
 const UCommon_1 = __importDefault(require("./UCommon/UCommon"));
 // user
 const getRelationList_1 = __importDefault(require("./user/getRelationList"));
-const getUserProfile_1 = __importDefault(require("./user/getUserProfile"));
 const getUserFavDiss_1 = __importDefault(require("./user/getUserFavDiss"));
+const getUserProfile_1 = __importDefault(require("./user/getUserProfile"));
 exports.default = {
     downloadQQMusic: downloadQQMusic_1.default,
     // search

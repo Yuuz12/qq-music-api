@@ -35,8 +35,17 @@ export default async (ctx: Context) => {
             }
           : null,
         disslist: (d.mydiss?.list || []).map(
-          (s: { dissid?: number; title?: string; picurl?: string; subtitle?: string }) => ({
+          (s: {
+            dissid?: number;
+            dirid?: number;
+            title?: string;
+            picurl?: string;
+            subtitle?: string;
+          }) => ({
             dissid: String(s.dissid || ''),
+            // 写接口（添加到歌单 PlaylistDetailWrite.AddSonglist）必须用内部 dirId
+            // （201=我喜欢；自建歌单为内部序号如 4），不能用 dissid/tid（会返回 80092）
+            dirId: s.dirid ? Number(s.dirid) : undefined,
             title: s.title || '',
             picurl: s.picurl || '',
             subtitle: s.subtitle || '',
