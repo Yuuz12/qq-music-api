@@ -6,8 +6,12 @@ import getComments from './comments/getComments';
 import getDigitalAlbumLists from './digitalAlbum/getDigitalAlbumLists';
 import downloadQQMusic from './downloadQQMusic';
 // fav
+import getIsAlbumFan from './fav/getIsAlbumFan';
+import getIsPlaylistFan from './fav/getIsPlaylistFan';
 import getIsSongFan from './fav/getIsSongFan';
+import setAlbumFav from './fav/setAlbumFav';
 import setFav from './fav/setFav';
+import setPlaylistFav from './fav/setPlaylistFav';
 // music
 import getLyric from './music/getLyric';
 // MV
@@ -35,6 +39,7 @@ import songLists from './songLists/songLists';
 import UCommon from './UCommon/UCommon';
 // user
 import getRelationList from './user/getRelationList';
+import getUserFavAlbum from './user/getUserFavAlbum';
 import getUserFavDiss from './user/getUserFavDiss';
 import getUserProfile from './user/getUserProfile';
 
@@ -62,6 +67,12 @@ export default {
   // fav（喜欢/红心）
   getIsSongFan,
   setFav,
+  // fav（专辑收藏）
+  getIsAlbumFan,
+  setAlbumFav,
+  // fav（歌单收藏）
+  getIsPlaylistFan,
+  setPlaylistFav,
   // DigitalAlbum
   getDigitalAlbumLists,
   // music
@@ -75,6 +86,7 @@ export default {
   // user
   getUserProfile,
   getUserFavDiss,
+  getUserFavAlbum,
   getRelationList,
   // getTopLists
   getTopLists,

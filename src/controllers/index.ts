@@ -9,6 +9,8 @@ import getDigitalAlbumLists from './getDigitalAlbumLists';
 import getDownloadQQMusic from './getDownloadQQMusic';
 import getHotKey from './getHotkey';
 import getImageUrl from './getImageUrl';
+import getIsAlbumFan from './getIsAlbumFan';
+import getIsPlaylistFan from './getIsPlaylistFan';
 import getIsSongFan from './getIsSongFan';
 import getLyric from './getLyric';
 import getMusicPlay from './getMusicPlay';
@@ -36,10 +38,13 @@ import getSongListDetail from './getSongListDetail';
 import getSongLists from './getSongLists';
 import getTicketInfo from './getTicketInfo';
 import getTopLists from './getTopLists';
+import getUserFavAlbum from './getUserFavAlbum';
 import getUserFavDiss from './getUserFavDiss';
 import getUserProfile from './getUserProfile';
 import radioDislike from './radioDislike';
+import setAlbumFav from './setAlbumFav';
 import setFav from './setFav';
+import setPlaylistFav from './setPlaylistFav';
 
 const { get: getCookie, set: setCookie } = cookies;
 
@@ -70,6 +75,10 @@ export default {
   getRadioTrack: withControllerLogging('getRadioTrack', getRadioTrack),
   radioDislike: withControllerLogging('radioDislike', radioDislike),
   setFav: withControllerLogging('setFav', setFav),
+  setAlbumFav: withControllerLogging('setAlbumFav', setAlbumFav),
+  setPlaylistFav: withControllerLogging('setPlaylistFav', setPlaylistFav),
+  getIsAlbumFan: withControllerLogging('getIsAlbumFan', getIsAlbumFan),
+  getIsPlaylistFan: withControllerLogging('getIsPlaylistFan', getIsPlaylistFan),
   getIsSongFan: withControllerLogging('getIsSongFan', getIsSongFan),
   getDigitalAlbumLists: withControllerLogging('getDigitalAlbumLists', getDigitalAlbumLists),
   getLyric: withControllerLogging('getLyric', getLyric),
@@ -85,5 +94,6 @@ export default {
   getImageUrl: withControllerLogging('getImageUrl', getImageUrl),
   getUserProfile: withControllerLogging('getUserProfile', getUserProfile),
   getUserFavDiss: withControllerLogging('getUserFavDiss', getUserFavDiss),
+  getUserFavAlbum: withControllerLogging('getUserFavAlbum', getUserFavAlbum),
   getRelationList: withControllerLogging('getRelationList', getRelationList),
 };

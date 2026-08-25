@@ -75,6 +75,18 @@ router.get('/getRadioTrack/:id?/:num?/:firstplay?', context.getRadioTrack);
 // fav（猜你喜欢页「喜欢」按钮：添加/取消喜欢到「我喜欢」列表）
 router.post('/setFav', context.setFav);
 
+// fav（收藏/取消收藏专辑，AlbumFavWrite；需登录 cookie）
+router.post('/setAlbumFav', context.setAlbumFav);
+
+// fav（批量查询专辑收藏状态，专辑页「收藏」按钮高亮；需登录 cookie）
+router.post('/getIsAlbumFan', context.getIsAlbumFan);
+
+// fav（收藏/取消收藏歌单，PlaylistFavWrite；需登录 cookie）
+router.post('/setPlaylistFav', context.setPlaylistFav);
+
+// fav（批量查询歌单收藏状态，歌单详情「收藏」按钮高亮；需登录 cookie）
+router.post('/getIsPlaylistFan', context.getIsPlaylistFan);
+
 // fav（批量查询歌曲喜欢状态，红心高亮）
 router.post('/getIsSongFan', context.getIsSongFan);
 
@@ -127,6 +139,9 @@ router.get('/getUserProfile', context.getUserProfile);
 
 // user fav diss（收藏歌单列表，需登录 cookie）
 router.get('/getUserFavDiss', context.getUserFavDiss);
+
+// user fav album（收藏专辑列表，需登录 cookie）
+router.get('/getUserFavAlbum', context.getUserFavAlbum);
 
 // relation list（关注歌手/关注用户/粉丝列表，需登录 cookie）
 router.get('/getRelationList', context.getRelationList);

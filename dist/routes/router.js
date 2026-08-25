@@ -54,6 +54,14 @@ router.get('/getRadioLists', controllers_1.default.getRadioLists);
 router.get('/getRadioTrack/:id?/:num?/:firstplay?', controllers_1.default.getRadioTrack);
 // fav（猜你喜欢页「喜欢」按钮：添加/取消喜欢到「我喜欢」列表）
 router.post('/setFav', controllers_1.default.setFav);
+// fav（收藏/取消收藏专辑，AlbumFavWrite；需登录 cookie）
+router.post('/setAlbumFav', controllers_1.default.setAlbumFav);
+// fav（批量查询专辑收藏状态，专辑页「收藏」按钮高亮；需登录 cookie）
+router.post('/getIsAlbumFan', controllers_1.default.getIsAlbumFan);
+// fav（收藏/取消收藏歌单，PlaylistFavWrite；需登录 cookie）
+router.post('/setPlaylistFav', controllers_1.default.setPlaylistFav);
+// fav（批量查询歌单收藏状态，歌单详情「收藏」按钮高亮；需登录 cookie）
+router.post('/getIsPlaylistFan', controllers_1.default.getIsPlaylistFan);
 // fav（批量查询歌曲喜欢状态，红心高亮）
 router.post('/getIsSongFan', controllers_1.default.getIsSongFan);
 // radio dislike（猜你喜欢页「删除」按钮：网页端仅统计上报，实际剔除歌曲在客户端本地完成）
@@ -88,6 +96,8 @@ router.get('/getImageUrl', controllers_1.default.getImageUrl);
 router.get('/getUserProfile', controllers_1.default.getUserProfile);
 // user fav diss（收藏歌单列表，需登录 cookie）
 router.get('/getUserFavDiss', controllers_1.default.getUserFavDiss);
+// user fav album（收藏专辑列表，需登录 cookie）
+router.get('/getUserFavAlbum', controllers_1.default.getUserFavAlbum);
 // relation list（关注歌手/关注用户/粉丝列表，需登录 cookie）
 router.get('/getRelationList', controllers_1.default.getRelationList);
 exports.default = router;

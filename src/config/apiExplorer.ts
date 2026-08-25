@@ -190,9 +190,19 @@ export const apiExplorerBaseRoutes: ApiExplorerBaseRoute[] = [
   },
   { name: 'radioDislike', method: 'POST', routePath: '/radioDislike', category: 'Radio' },
   { name: 'setFav', method: 'POST', routePath: '/setFav', category: 'Favorite' },
+  { name: 'setAlbumFav', method: 'POST', routePath: '/setAlbumFav', category: 'Favorite' },
+  { name: 'setPlaylistFav', method: 'POST', routePath: '/setPlaylistFav', category: 'Favorite' },
+  { name: 'getIsAlbumFan', method: 'POST', routePath: '/getIsAlbumFan', category: 'Favorite' },
+  {
+    name: 'getIsPlaylistFan',
+    method: 'POST',
+    routePath: '/getIsPlaylistFan',
+    category: 'Favorite',
+  },
   { name: 'getIsSongFan', method: 'POST', routePath: '/getIsSongFan', category: 'Favorite' },
   { name: 'getUserProfile', method: 'GET', routePath: '/getUserProfile', category: 'User' },
   { name: 'getUserFavDiss', method: 'GET', routePath: '/getUserFavDiss', category: 'User' },
+  { name: 'getUserFavAlbum', method: 'GET', routePath: '/getUserFavAlbum', category: 'User' },
   {
     name: 'getRelationList',
     method: 'GET',
@@ -448,6 +458,16 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
       isFan: false,
     },
   },
+  setAlbumFav: {
+    id: 'set-album-fav',
+    description:
+      'Favorite/unfavorite an album via music.musicasset.AlbumFavWrite (FavAlbum / CancelFavAlbum). isFan=true cancels, false favorites. Requires login cookie; write goes through the official-channel proxy (npm run proxy).',
+    bodyDescription: 'JSON body with albumMid and current isFan state.',
+    bodyExample: {
+      albumMid: '0016l2F430zMux',
+      isFan: false,
+    },
+  },
   getIsSongFan: {
     id: 'get-is-song-fan',
     description:
@@ -455,6 +475,34 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
     bodyDescription: 'JSON body with songmids array.',
     bodyExample: {
       songmids: ['003rJSwm3TechU'],
+    },
+  },
+  getIsAlbumFan: {
+    id: 'get-is-album-fan',
+    description:
+      'Batch check album favorite state by album mids via music.musicasset.AlbumFavRead (IsAlbumFan).',
+    bodyDescription: 'JSON body with albummids array.',
+    bodyExample: {
+      albummids: ['0016l2F430zMux'],
+    },
+  },
+  setPlaylistFav: {
+    id: 'set-playlist-fav',
+    description:
+      'Favorite/unfavorite a playlist via music.musicasset.PlaylistFavWrite (FavPlaylist / CancelFavPlaylist). isFan=true cancels, false favorites. Requires login cookie; write goes through the official-channel proxy (npm run proxy).',
+    bodyDescription: 'JSON body with disstid and current isFan state.',
+    bodyExample: {
+      disstid: '7011264340',
+      isFan: false,
+    },
+  },
+  getIsPlaylistFan: {
+    id: 'get-is-playlist-fan',
+    description:
+      'Batch check playlist favorite state by disstids via music.musicasset.PlaylistFavRead (IsPlaylistFan).',
+    bodyDescription: 'JSON body with disstids array.',
+    bodyExample: {
+      disstids: ['7011264340'],
     },
   },
   getUserProfile: {
@@ -466,6 +514,29 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
     id: 'get-user-fav-diss',
     description:
       'Get user collected playlists (收藏歌单): same item shape as getUserProfile.disslist.',
+    queryParams: [
+      {
+        key: 'sin',
+        label: 'Start offset',
+        inputType: 'number',
+        required: false,
+        defaultValue: 0,
+        description: 'Start offset (default 0)',
+      },
+      {
+        key: 'num',
+        label: 'Page size',
+        inputType: 'number',
+        required: false,
+        defaultValue: 100,
+        description: 'Page size (default 100, max 200)',
+      },
+    ],
+  },
+  getUserFavAlbum: {
+    id: 'get-user-fav-album',
+    description:
+      'Get user collected albums (我喜欢→专辑): albummid/title/singername/picurl/pubtime. Same upstream as getUserFavDiss with reqtype=2.',
     queryParams: [
       {
         key: 'sin',

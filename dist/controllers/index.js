@@ -14,7 +14,9 @@ const getDigitalAlbumLists_1 = __importDefault(require("./getDigitalAlbumLists")
 const getDownloadQQMusic_1 = __importDefault(require("./getDownloadQQMusic"));
 const getHotkey_1 = __importDefault(require("./getHotkey"));
 const getImageUrl_1 = __importDefault(require("./getImageUrl"));
+const getIsAlbumFan_1 = __importDefault(require("./getIsAlbumFan"));
 const getIsSongFan_1 = __importDefault(require("./getIsSongFan"));
+const getIsPlaylistFan_1 = __importDefault(require("./getIsPlaylistFan"));
 const getLyric_1 = __importDefault(require("./getLyric"));
 const getMusicPlay_1 = __importDefault(require("./getMusicPlay"));
 const getMv_1 = __importDefault(require("./getMv"));
@@ -41,10 +43,13 @@ const getSongListDetail_1 = __importDefault(require("./getSongListDetail"));
 const getSongLists_1 = __importDefault(require("./getSongLists"));
 const getTicketInfo_1 = __importDefault(require("./getTicketInfo"));
 const getTopLists_1 = __importDefault(require("./getTopLists"));
+const getUserFavAlbum_1 = __importDefault(require("./getUserFavAlbum"));
 const getUserFavDiss_1 = __importDefault(require("./getUserFavDiss"));
 const getUserProfile_1 = __importDefault(require("./getUserProfile"));
 const radioDislike_1 = __importDefault(require("./radioDislike"));
+const setAlbumFav_1 = __importDefault(require("./setAlbumFav"));
 const setFav_1 = __importDefault(require("./setFav"));
+const setPlaylistFav_1 = __importDefault(require("./setPlaylistFav"));
 const { get: getCookie, set: setCookie } = cookies_1.default;
 exports.default = {
     getCookie: (0, observability_1.withControllerLogging)('getCookie', getCookie),
@@ -73,6 +78,10 @@ exports.default = {
     getRadioTrack: (0, observability_1.withControllerLogging)('getRadioTrack', getRadioTrack_1.default),
     radioDislike: (0, observability_1.withControllerLogging)('radioDislike', radioDislike_1.default),
     setFav: (0, observability_1.withControllerLogging)('setFav', setFav_1.default),
+    setAlbumFav: (0, observability_1.withControllerLogging)('setAlbumFav', setAlbumFav_1.default),
+    setPlaylistFav: (0, observability_1.withControllerLogging)('setPlaylistFav', setPlaylistFav_1.default),
+    getIsAlbumFan: (0, observability_1.withControllerLogging)('getIsAlbumFan', getIsAlbumFan_1.default),
+    getIsPlaylistFan: (0, observability_1.withControllerLogging)('getIsPlaylistFan', getIsPlaylistFan_1.default),
     getIsSongFan: (0, observability_1.withControllerLogging)('getIsSongFan', getIsSongFan_1.default),
     getDigitalAlbumLists: (0, observability_1.withControllerLogging)('getDigitalAlbumLists', getDigitalAlbumLists_1.default),
     getLyric: (0, observability_1.withControllerLogging)('getLyric', getLyric_1.default),
@@ -88,5 +97,6 @@ exports.default = {
     getImageUrl: (0, observability_1.withControllerLogging)('getImageUrl', getImageUrl_1.default),
     getUserProfile: (0, observability_1.withControllerLogging)('getUserProfile', getUserProfile_1.default),
     getUserFavDiss: (0, observability_1.withControllerLogging)('getUserFavDiss', getUserFavDiss_1.default),
+    getUserFavAlbum: (0, observability_1.withControllerLogging)('getUserFavAlbum', getUserFavAlbum_1.default),
     getRelationList: (0, observability_1.withControllerLogging)('getRelationList', getRelationList_1.default),
 };

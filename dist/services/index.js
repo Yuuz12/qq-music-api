@@ -11,8 +11,12 @@ const getComments_1 = __importDefault(require("./comments/getComments"));
 const getDigitalAlbumLists_1 = __importDefault(require("./digitalAlbum/getDigitalAlbumLists"));
 const downloadQQMusic_1 = __importDefault(require("./downloadQQMusic"));
 // fav
+const getIsAlbumFan_1 = __importDefault(require("./fav/getIsAlbumFan"));
+const getIsPlaylistFan_1 = __importDefault(require("./fav/getIsPlaylistFan"));
 const getIsSongFan_1 = __importDefault(require("./fav/getIsSongFan"));
+const setAlbumFav_1 = __importDefault(require("./fav/setAlbumFav"));
 const setFav_1 = __importDefault(require("./fav/setFav"));
+const setPlaylistFav_1 = __importDefault(require("./fav/setPlaylistFav"));
 // music
 const getLyric_1 = __importDefault(require("./music/getLyric"));
 // MV
@@ -40,6 +44,7 @@ const songLists_1 = __importDefault(require("./songLists/songLists"));
 const UCommon_1 = __importDefault(require("./UCommon/UCommon"));
 // user
 const getRelationList_1 = __importDefault(require("./user/getRelationList"));
+const getUserFavAlbum_1 = __importDefault(require("./user/getUserFavAlbum"));
 const getUserFavDiss_1 = __importDefault(require("./user/getUserFavDiss"));
 const getUserProfile_1 = __importDefault(require("./user/getUserProfile"));
 exports.default = {
@@ -66,6 +71,12 @@ exports.default = {
     // fav（喜欢/红心）
     getIsSongFan: getIsSongFan_1.default,
     setFav: setFav_1.default,
+    // fav（专辑收藏）
+    getIsAlbumFan: getIsAlbumFan_1.default,
+    setAlbumFav: setAlbumFav_1.default,
+    // fav（歌单收藏）
+    getIsPlaylistFan: getIsPlaylistFan_1.default,
+    setPlaylistFav: setPlaylistFav_1.default,
     // DigitalAlbum
     getDigitalAlbumLists: getDigitalAlbumLists_1.default,
     // music
@@ -79,6 +90,7 @@ exports.default = {
     // user
     getUserProfile: getUserProfile_1.default,
     getUserFavDiss: getUserFavDiss_1.default,
+    getUserFavAlbum: getUserFavAlbum_1.default,
     getRelationList: getRelationList_1.default,
     // getTopLists
     getTopLists: getTopLists_1.default,
