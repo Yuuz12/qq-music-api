@@ -9,7 +9,7 @@ const requestCredential_1 = require("../../util/requestCredential");
 /** 单次请求的 mid 数上限（100 个 ≈ 查询串 2.5KB，远低于上游 URI 限制） */
 const BATCH_SIZE = 100;
 const UPSTREAM_URL = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
-exports.default = async ({ albummids = [] } = {}) => {
+exports.default = async ({ albummids = [], } = {}) => {
     const mids = albummids.map(String);
     // 切批：每批独立走一次 musicu.fcg（空列表也保留一个空批，与既有行为一致）
     const batches = [];

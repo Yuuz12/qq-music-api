@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { logger } from '../../util/logger';
+import { proxyFailureText } from '../../util/proxyError';
 import { getRequestCookie, getRequestUin } from '../../util/requestCredential';
 
 /**
@@ -70,18 +71,17 @@ export default async ({ disstid = '', isFan = false }: SetPlaylistFavParams = {}
       },
     };
   } catch (error) {
-    const msg = String((error as Error)?.message || error);
-    logger.error('[setPlaylistFav] proxy call failed:', msg);
-    const proxyHint =
-      msg.includes('ECONNREFUSED') || msg.includes('fetch failed')
-        ? '（代理未启动：请先运行 npm run proxy）'
-        : '';
+    const msg = proxyFailureText(error);
+    logger.error(
+      '[setPlaylistFav] proxy call failed:',
+      error instanceof Error ? error.message : error,
+    );
     return {
       status: 500,
       body: {
         response: {
           code: -1,
-          error: `${msg}${proxyHint}`,
+          error: msg,
         },
       },
     };

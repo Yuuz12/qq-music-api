@@ -149,7 +149,12 @@ exports.apiExplorerBaseRoutes = [
     { name: 'setAlbumFav', method: 'POST', routePath: '/setAlbumFav', category: 'Favorite' },
     { name: 'setPlaylistFav', method: 'POST', routePath: '/setPlaylistFav', category: 'Favorite' },
     { name: 'getIsAlbumFan', method: 'POST', routePath: '/getIsAlbumFan', category: 'Favorite' },
-    { name: 'getIsPlaylistFan', method: 'POST', routePath: '/getIsPlaylistFan', category: 'Favorite' },
+    {
+        name: 'getIsPlaylistFan',
+        method: 'POST',
+        routePath: '/getIsPlaylistFan',
+        category: 'Favorite',
+    },
     { name: 'getIsSongFan', method: 'POST', routePath: '/getIsSongFan', category: 'Favorite' },
     { name: 'getUserProfile', method: 'GET', routePath: '/getUserProfile', category: 'User' },
     { name: 'getUserFavDiss', method: 'GET', routePath: '/getUserFavDiss', category: 'User' },

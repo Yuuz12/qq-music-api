@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const logger_1 = require("../../util/logger");
 const requestCredential_1 = require("../../util/requestCredential");
+const proxyError_1 = require("../../util/proxyError");
 const PROXY_URL = process.env.PROXY_URL || 'http://localhost:9339';
 exports.default = async ({ albumMid = '', isFan = false } = {}) => {
     const mid = String(albumMid ?? '').trim();
@@ -47,17 +48,14 @@ exports.default = async ({ albumMid = '', isFan = false } = {}) => {
         };
     }
     catch (error) {
-        const msg = String(error?.message || error);
-        logger_1.logger.error('[setAlbumFav] proxy call failed:', msg);
-        const proxyHint = msg.includes('ECONNREFUSED') || msg.includes('fetch failed')
-            ? '（代理未启动：请先运行 npm run proxy）'
-            : '';
+        const msg = (0, proxyError_1.proxyFailureText)(error);
+        logger_1.logger.error('[setAlbumFav] proxy call failed:', error instanceof Error ? error.message : error);
         return {
             status: 500,
             body: {
                 response: {
                     code: -1,
-                    error: `${msg}${proxyHint}`,
+                    error: msg,
                 },
             },
         };

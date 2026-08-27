@@ -9,7 +9,7 @@ const requestCredential_1 = require("../../util/requestCredential");
 /** 单次请求的 mid 数上限（100 个 ≈ 查询串 2.5KB，远低于上游 URI 限制） */
 const BATCH_SIZE = 100;
 const UPSTREAM_URL = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
-exports.default = async ({ disstids = [] } = {}) => {
+exports.default = async ({ disstids = [], } = {}) => {
     const tids = disstids.map(String);
     // 切批：每批独立走一次 musicu.fcg（空列表也保留一个空批，与既有行为一致）
     const batches = [];
@@ -18,7 +18,10 @@ exports.default = async ({ disstids = [] } = {}) => {
     }
     if (!batches.length)
         batches.push([]);
-    (0, observability_1.logServiceRequest)('getIsPlaylistFan', UPSTREAM_URL, { count: tids.length, batches: batches.length });
+    (0, observability_1.logServiceRequest)('getIsPlaylistFan', UPSTREAM_URL, {
+        count: tids.length,
+        batches: batches.length,
+    });
     const settled = await Promise.allSettled(batches.map((batch) => {
         const data = {
             comm: {

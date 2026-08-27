@@ -13,9 +13,7 @@ const { getIsAlbumFan } = services_1.default;
  */
 exports.default = async (ctx) => {
     const body = ctx.request.body || {};
-    const albummids = Array.isArray(body.albummids)
-        ? body.albummids
-        : [];
+    const albummids = Array.isArray(body.albummids) ? body.albummids : [];
     if (!albummids.length) {
         ctx.status = 400;
         ctx.body = { response: { code: -1, message: 'albummids is required' } };

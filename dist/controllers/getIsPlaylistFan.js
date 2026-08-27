@@ -13,9 +13,7 @@ const { getIsPlaylistFan } = services_1.default;
  */
 exports.default = async (ctx) => {
     const body = ctx.request.body || {};
-    const disstids = Array.isArray(body.disstids)
-        ? body.disstids
-        : [];
+    const disstids = Array.isArray(body.disstids) ? body.disstids : [];
     if (!disstids.length) {
         ctx.status = 400;
         ctx.body = { response: { code: -1, message: 'disstids is required' } };

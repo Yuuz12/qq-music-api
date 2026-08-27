@@ -7,6 +7,7 @@ exports.DEFAULT_FAV_DIR_ID = void 0;
 const axios_1 = __importDefault(require("axios"));
 const logger_1 = require("../../util/logger");
 const requestCredential_1 = require("../../util/requestCredential");
+const proxyError_1 = require("../../util/proxyError");
 exports.DEFAULT_FAV_DIR_ID = 201;
 const PROXY_URL = process.env.PROXY_URL || 'http://localhost:9339';
 exports.default = async ({ dirId = exports.DEFAULT_FAV_DIR_ID, songs = [], isFan = false, } = {}) => {
@@ -46,17 +47,14 @@ exports.default = async ({ dirId = exports.DEFAULT_FAV_DIR_ID, songs = [], isFan
         };
     }
     catch (error) {
-        const msg = String(error?.message || error);
-        logger_1.logger.error('[setFav] proxy call failed:', msg);
-        const proxyHint = msg.includes('ECONNREFUSED') || msg.includes('fetch failed')
-            ? '（代理未启动：请先运行 npm run proxy）'
-            : '';
+        const msg = (0, proxyError_1.proxyFailureText)(error);
+        logger_1.logger.error('[setFav] proxy call failed:', error instanceof Error ? error.message : error);
         return {
             status: 500,
             body: {
                 response: {
                     code: -1,
-                    error: `${msg}${proxyHint}`,
+                    error: msg,
                 },
             },
         };
