@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DEFAULT_FAV_DIR_ID = void 0;
 const axios_1 = __importDefault(require("axios"));
 const logger_1 = require("../../util/logger");
-const requestCredential_1 = require("../../util/requestCredential");
 const proxyError_1 = require("../../util/proxyError");
+const requestCredential_1 = require("../../util/requestCredential");
 exports.DEFAULT_FAV_DIR_ID = 201;
 const PROXY_URL = process.env.PROXY_URL || 'http://localhost:9339';
 exports.default = async ({ dirId = exports.DEFAULT_FAV_DIR_ID, songs = [], isFan = false, } = {}) => {
