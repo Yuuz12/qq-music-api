@@ -24,6 +24,7 @@ import getRanks from './getRanks';
 import getRecommend from './getRecommend';
 import getRelationList from './getRelationList';
 import getSearchByKey from './getSearchByKey';
+import getSearchByType from './getSearchByType';
 import getSimilarSinger from './getSimilarSinger';
 import getSingerAlbum from './getSingerAlbum';
 import getSingerDesc from './getSingerDesc';
@@ -54,6 +55,7 @@ export default {
   getDownloadQQMusic: withControllerLogging('getDownloadQQMusic', getDownloadQQMusic),
   getHotKey: withControllerLogging('getHotKey', getHotKey),
   getSearchByKey: withControllerLogging('getSearchByKey', getSearchByKey),
+  getSearchByType: withControllerLogging('getSearchByType', getSearchByType),
   getSmartbox: withControllerLogging('getSmartbox', getSmartbox),
   getSongListCategories: withControllerLogging('getSongListCategories', getSongListCategories),
   getSongLists: withControllerLogging('getSongLists', getSongLists),

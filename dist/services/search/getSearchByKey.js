@@ -6,7 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const observability_1 = require("../../util/observability");
 const y_common_1 = __importDefault(require("../y_common"));
 const upstream = '/soso/fcgi-bin/client_search_cp';
+/** t（搜索类型）→ remoteplace 后缀；未识别的类型回落到歌曲 */
+const REMOTEPLACE_BY_TYPE = {
+    0: 'song',
+    2: 'user',
+    3: 'playlist',
+    7: 'lyric',
+    8: 'album',
+    9: 'singer',
+};
 exports.default = ({ method = 'get', params = {}, option = {} }) => {
+    const t = Number(params.t) || 0;
     const data = Object.assign(params, {
         format: 'json',
         outCharset: 'utf-8',
@@ -15,9 +25,9 @@ exports.default = ({ method = 'get', params = {}, option = {} }) => {
         // https://github.com/Rain120/qq-music-api/issues/68
         // Upstream returns code:0 with totalnum:0 (empty song list) when new_json=1.
         // new_json: 1,
-        remoteplace: 'txt.yqq.song',
+        remoteplace: `txt.yqq.${REMOTEPLACE_BY_TYPE[t] || 'song'}`,
         // searchid: 58932895599763136,
-        t: 0,
+        t,
         aggr: 1,
         cr: 1,
         lossless: 0,

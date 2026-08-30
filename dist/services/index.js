@@ -30,6 +30,7 @@ const getTopLists_1 = __importDefault(require("./rank/getTopLists"));
 // search
 const getHotKey_1 = __importDefault(require("./search/getHotKey"));
 const getSearchByKey_1 = __importDefault(require("./search/getSearchByKey"));
+const getSearchByType_1 = __importDefault(require("./search/getSearchByType"));
 const getSmartbox_1 = __importDefault(require("./search/getSmartbox"));
 // singer
 const getSimilarSinger_1 = __importDefault(require("./singers/getSimilarSinger"));
@@ -52,6 +53,7 @@ exports.default = {
     // search
     getHotKey: getHotKey_1.default,
     getSearchByKey: getSearchByKey_1.default,
+    getSearchByType: getSearchByType_1.default,
     getSmartbox: getSmartbox_1.default,
     // song lists
     songLists: songLists_1.default,

@@ -15,6 +15,9 @@ router.get('/getHotkey', context.getHotKey);
 
 router.get('/getSearchByKey/:key?/:limit?/:page?/:catZhida?', context.getSearchByKey);
 
+// 分类搜索（musicu.fcg）：t=1 歌手 / 2 专辑 / 3 歌单 / 8 用户
+router.get('/getSearchByType/:key?/:limit?/:page?/:t?', context.getSearchByType);
+
 // search smartbox
 router.get('/getSmartbox/:key?', context.getSmartbox);
 

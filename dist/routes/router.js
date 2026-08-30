@@ -13,6 +13,8 @@ router.get('/user/setCookie', controllers_1.default.setCookie);
 router.get('/downloadQQMusic', controllers_1.default.getDownloadQQMusic);
 router.get('/getHotkey', controllers_1.default.getHotKey);
 router.get('/getSearchByKey/:key?/:limit?/:page?/:catZhida?', controllers_1.default.getSearchByKey);
+// 分类搜索（musicu.fcg）：t=1 歌手 / 2 专辑 / 3 歌单 / 8 用户
+router.get('/getSearchByType/:key?/:limit?/:page?/:t?', controllers_1.default.getSearchByType);
 // search smartbox
 router.get('/getSmartbox/:key?', controllers_1.default.getSmartbox);
 // 1

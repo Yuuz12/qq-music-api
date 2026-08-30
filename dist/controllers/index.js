@@ -29,6 +29,7 @@ const getRanks_1 = __importDefault(require("./getRanks"));
 const getRecommend_1 = __importDefault(require("./getRecommend"));
 const getRelationList_1 = __importDefault(require("./getRelationList"));
 const getSearchByKey_1 = __importDefault(require("./getSearchByKey"));
+const getSearchByType_1 = __importDefault(require("./getSearchByType"));
 const getSimilarSinger_1 = __importDefault(require("./getSimilarSinger"));
 const getSingerAlbum_1 = __importDefault(require("./getSingerAlbum"));
 const getSingerDesc_1 = __importDefault(require("./getSingerDesc"));
@@ -57,6 +58,7 @@ exports.default = {
     getDownloadQQMusic: (0, observability_1.withControllerLogging)('getDownloadQQMusic', getDownloadQQMusic_1.default),
     getHotKey: (0, observability_1.withControllerLogging)('getHotKey', getHotkey_1.default),
     getSearchByKey: (0, observability_1.withControllerLogging)('getSearchByKey', getSearchByKey_1.default),
+    getSearchByType: (0, observability_1.withControllerLogging)('getSearchByType', getSearchByType_1.default),
     getSmartbox: (0, observability_1.withControllerLogging)('getSmartbox', getSmartbox_1.default),
     getSongListCategories: (0, observability_1.withControllerLogging)('getSongListCategories', getSongListCategories_1.default),
     getSongLists: (0, observability_1.withControllerLogging)('getSongLists', getSongLists_1.default),

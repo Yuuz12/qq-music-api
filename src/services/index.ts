@@ -25,6 +25,7 @@ import getTopLists from './rank/getTopLists';
 // search
 import getHotKey from './search/getHotKey';
 import getSearchByKey from './search/getSearchByKey';
+import getSearchByType from './search/getSearchByType';
 import getSmartbox from './search/getSmartbox';
 // singer
 import getSimilarSinger from './singers/getSimilarSinger';
@@ -48,6 +49,7 @@ export default {
   // search
   getHotKey,
   getSearchByKey,
+  getSearchByType,
   getSmartbox,
   // song lists
   songLists,
