@@ -22,6 +22,8 @@ import getRadioTrack from './radio/getRadioTrack';
 import radioDislike from './radio/radioDislike';
 // getTopLists
 import getTopLists from './rank/getTopLists';
+// recommend
+import getRecommendFeed from './recommend/getRecommendFeed';
 // search
 import getHotKey from './search/getHotKey';
 import getSearchByKey from './search/getSearchByKey';
@@ -38,11 +40,14 @@ import songListDetail from './songLists/songListDetail';
 import songLists from './songLists/songLists';
 // UCommon
 import UCommon from './UCommon/UCommon';
+import getPlayRecently from './user/getPlayRecently';
 // user
 import getRelationList from './user/getRelationList';
 import getUserFavAlbum from './user/getUserFavAlbum';
 import getUserFavDiss from './user/getUserFavDiss';
 import getUserProfile from './user/getUserProfile';
+import { deletePlayRecently, reportPlayRecently } from './user/playRecentlyWrite';
+import refreshCredential from './user/refreshCredential';
 
 export default {
   downloadQQMusic,
@@ -87,9 +92,15 @@ export default {
   UCommon,
   // user
   getUserProfile,
+  getPlayRecently,
+  reportPlayRecently,
+  deletePlayRecently,
   getUserFavDiss,
   getUserFavAlbum,
   getRelationList,
+  refreshCredential,
   // getTopLists
   getTopLists,
+  // recommend（为你推荐·个性化歌单流）
+  getRecommendFeed,
 };

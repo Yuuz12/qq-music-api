@@ -2,6 +2,7 @@ import { withControllerLogging } from '../util/observability';
 import batchGetSongInfo from './batchGetSongInfo';
 import batchGetSongLists from './batchGetSongLists';
 import cookies from './cookies';
+import deletePlayRecently from './deletePlayRecently';
 import getAlbumInfo from './getAlbumInfo';
 import getComments from './getComments';
 import getDailyPlaylist from './getDailyPlaylist';
@@ -18,10 +19,12 @@ import getMv from './getMv';
 import getMvByTag from './getMvByTag';
 import getMvPlay from './getMvPlay';
 import getNewDisks from './getNewDisks';
+import getPlayRecently from './getPlayRecently';
 import getRadioLists from './getRadioLists';
 import getRadioTrack from './getRadioTrack';
 import getRanks from './getRanks';
 import getRecommend from './getRecommend';
+import getRecommendFeed from './getRecommendFeed';
 import getRelationList from './getRelationList';
 import getSearchByKey from './getSearchByKey';
 import getSearchByType from './getSearchByType';
@@ -43,6 +46,8 @@ import getUserFavAlbum from './getUserFavAlbum';
 import getUserFavDiss from './getUserFavDiss';
 import getUserProfile from './getUserProfile';
 import radioDislike from './radioDislike';
+import refreshCredential from './refreshCredential';
+import reportPlayRecently from './reportPlayRecently';
 import setAlbumFav from './setAlbumFav';
 import setFav from './setFav';
 import setPlaylistFav from './setPlaylistFav';
@@ -89,13 +94,18 @@ export default {
   getComments: withControllerLogging('getComments', getComments),
   getDailyPlaylist: withControllerLogging('getDailyPlaylist', getDailyPlaylist),
   getRecommend: withControllerLogging('getRecommend', getRecommend),
+  getRecommendFeed: withControllerLogging('getRecommendFeed', getRecommendFeed),
   getMvPlay: withControllerLogging('getMvPlay', getMvPlay),
   getTopLists: withControllerLogging('getTopLists', getTopLists),
   getRanks: withControllerLogging('getRanks', getRanks),
   getTicketInfo: withControllerLogging('getTicketInfo', getTicketInfo),
   getImageUrl: withControllerLogging('getImageUrl', getImageUrl),
   getUserProfile: withControllerLogging('getUserProfile', getUserProfile),
+  getPlayRecently: withControllerLogging('getPlayRecently', getPlayRecently),
+  reportPlayRecently: withControllerLogging('reportPlayRecently', reportPlayRecently),
+  deletePlayRecently: withControllerLogging('deletePlayRecently', deletePlayRecently),
   getUserFavDiss: withControllerLogging('getUserFavDiss', getUserFavDiss),
   getUserFavAlbum: withControllerLogging('getUserFavAlbum', getUserFavAlbum),
   getRelationList: withControllerLogging('getRelationList', getRelationList),
+  refreshCredential: withControllerLogging('refreshCredential', refreshCredential),
 };

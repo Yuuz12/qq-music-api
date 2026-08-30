@@ -119,6 +119,9 @@ router.get(
 // recommend
 router.get('/getRecommend', context.getRecommend);
 
+// recommend feed（首页「为你推荐」个性化歌单流，需登录 cookie 才个性化）
+router.get('/getRecommendFeed', context.getRecommendFeed);
+
 // daily playlist（每日30首/今日私享 disstid，需登录 cookie）
 router.get('/getDailyPlaylist', context.getDailyPlaylist);
 
@@ -140,6 +143,11 @@ router.get('/getImageUrl', context.getImageUrl);
 // user profile（个人主页聚合：昵称/头像/粉丝/关注/我喜欢/创建的歌单）
 router.get('/getUserProfile', context.getUserProfile);
 
+// user refresh（刷新登录：用当前 musickey 换发新 key 延长有效期，对应 jsososo /user/refresh）
+router.get('/user/refresh', context.refreshCredential);
+// 同接口的 POST 别名（语义上属凭据维护操作）
+router.post('/user/refresh', context.refreshCredential);
+
 // user fav diss（收藏歌单列表，需登录 cookie）
 router.get('/getUserFavDiss', context.getUserFavDiss);
 
@@ -148,5 +156,12 @@ router.get('/getUserFavAlbum', context.getUserFavAlbum);
 
 // relation list（关注歌手/关注用户/粉丝列表，需登录 cookie）
 router.get('/getRelationList', context.getRelationList);
+
+// play recently（最近播放列表，云端同步接口 PlayRecentlyRead；需登录 cookie）
+router.get('/getPlayRecently', context.getPlayRecently);
+
+// play recently 写通道（客户端同款 PlayRecentlyWrite；需登录 cookie）
+router.post('/reportPlayRecently', context.reportPlayRecently);
+router.post('/deletePlayRecently', context.deletePlayRecently);
 
 export default router;
