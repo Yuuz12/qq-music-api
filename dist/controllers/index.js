@@ -4,13 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const observability_1 = require("../util/observability");
+const addDislike_1 = __importDefault(require("./addDislike"));
 const batchGetSongInfo_1 = __importDefault(require("./batchGetSongInfo"));
 const batchGetSongLists_1 = __importDefault(require("./batchGetSongLists"));
+const cancelDislike_1 = __importDefault(require("./cancelDislike"));
 const cookies_1 = __importDefault(require("./cookies"));
+const deletePlayRecently_1 = __importDefault(require("./deletePlayRecently"));
 const getAlbumInfo_1 = __importDefault(require("./getAlbumInfo"));
 const getComments_1 = __importDefault(require("./getComments"));
 const getDailyPlaylist_1 = __importDefault(require("./getDailyPlaylist"));
 const getDigitalAlbumLists_1 = __importDefault(require("./getDigitalAlbumLists"));
+const getDislikeList_1 = __importDefault(require("./getDislikeList"));
 const getDownloadQQMusic_1 = __importDefault(require("./getDownloadQQMusic"));
 const getHotkey_1 = __importDefault(require("./getHotkey"));
 const getImageUrl_1 = __importDefault(require("./getImageUrl"));
@@ -23,10 +27,12 @@ const getMv_1 = __importDefault(require("./getMv"));
 const getMvByTag_1 = __importDefault(require("./getMvByTag"));
 const getMvPlay_1 = __importDefault(require("./getMvPlay"));
 const getNewDisks_1 = __importDefault(require("./getNewDisks"));
+const getPlayRecently_1 = __importDefault(require("./getPlayRecently"));
 const getRadioLists_1 = __importDefault(require("./getRadioLists"));
 const getRadioTrack_1 = __importDefault(require("./getRadioTrack"));
 const getRanks_1 = __importDefault(require("./getRanks"));
 const getRecommend_1 = __importDefault(require("./getRecommend"));
+const getRecommendFeed_1 = __importDefault(require("./getRecommendFeed"));
 const getRelationList_1 = __importDefault(require("./getRelationList"));
 const getSearchByKey_1 = __importDefault(require("./getSearchByKey"));
 const getSearchByType_1 = __importDefault(require("./getSearchByType"));
@@ -48,6 +54,8 @@ const getUserFavAlbum_1 = __importDefault(require("./getUserFavAlbum"));
 const getUserFavDiss_1 = __importDefault(require("./getUserFavDiss"));
 const getUserProfile_1 = __importDefault(require("./getUserProfile"));
 const radioDislike_1 = __importDefault(require("./radioDislike"));
+const refreshCredential_1 = __importDefault(require("./refreshCredential"));
+const reportPlayRecently_1 = __importDefault(require("./reportPlayRecently"));
 const setAlbumFav_1 = __importDefault(require("./setAlbumFav"));
 const setFav_1 = __importDefault(require("./setFav"));
 const setPlaylistFav_1 = __importDefault(require("./setPlaylistFav"));
@@ -92,13 +100,21 @@ exports.default = {
     getComments: (0, observability_1.withControllerLogging)('getComments', getComments_1.default),
     getDailyPlaylist: (0, observability_1.withControllerLogging)('getDailyPlaylist', getDailyPlaylist_1.default),
     getRecommend: (0, observability_1.withControllerLogging)('getRecommend', getRecommend_1.default),
+    getRecommendFeed: (0, observability_1.withControllerLogging)('getRecommendFeed', getRecommendFeed_1.default),
     getMvPlay: (0, observability_1.withControllerLogging)('getMvPlay', getMvPlay_1.default),
     getTopLists: (0, observability_1.withControllerLogging)('getTopLists', getTopLists_1.default),
     getRanks: (0, observability_1.withControllerLogging)('getRanks', getRanks_1.default),
     getTicketInfo: (0, observability_1.withControllerLogging)('getTicketInfo', getTicketInfo_1.default),
     getImageUrl: (0, observability_1.withControllerLogging)('getImageUrl', getImageUrl_1.default),
     getUserProfile: (0, observability_1.withControllerLogging)('getUserProfile', getUserProfile_1.default),
+    getPlayRecently: (0, observability_1.withControllerLogging)('getPlayRecently', getPlayRecently_1.default),
+    reportPlayRecently: (0, observability_1.withControllerLogging)('reportPlayRecently', reportPlayRecently_1.default),
+    deletePlayRecently: (0, observability_1.withControllerLogging)('deletePlayRecently', deletePlayRecently_1.default),
     getUserFavDiss: (0, observability_1.withControllerLogging)('getUserFavDiss', getUserFavDiss_1.default),
     getUserFavAlbum: (0, observability_1.withControllerLogging)('getUserFavAlbum', getUserFavAlbum_1.default),
     getRelationList: (0, observability_1.withControllerLogging)('getRelationList', getRelationList_1.default),
+    refreshCredential: (0, observability_1.withControllerLogging)('refreshCredential', refreshCredential_1.default),
+    addDislike: (0, observability_1.withControllerLogging)('addDislike', addDislike_1.default),
+    cancelDislike: (0, observability_1.withControllerLogging)('cancelDislike', cancelDislike_1.default),
+    getDislikeList: (0, observability_1.withControllerLogging)('getDislikeList', getDislikeList_1.default),
 };

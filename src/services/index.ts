@@ -40,6 +40,7 @@ import songListDetail from './songLists/songListDetail';
 import songLists from './songLists/songLists';
 // UCommon
 import UCommon from './UCommon/UCommon';
+import { addDislike, cancelDislike, getDislikeList } from './user/feedbackBlack';
 import getPlayRecently from './user/getPlayRecently';
 // user
 import getRelationList from './user/getRelationList';
@@ -103,4 +104,8 @@ export default {
   getTopLists,
   // recommend（为你推荐·个性化歌单流）
   getRecommendFeed,
+  // 不喜欢/黑名单（FeedbackBlack，猜你喜欢等「删除这首歌曲」按钮）
+  addDislike,
+  cancelDislike,
+  getDislikeList,
 };

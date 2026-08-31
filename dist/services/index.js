@@ -27,6 +27,8 @@ const getRadioTrack_1 = __importDefault(require("./radio/getRadioTrack"));
 const radioDislike_1 = __importDefault(require("./radio/radioDislike"));
 // getTopLists
 const getTopLists_1 = __importDefault(require("./rank/getTopLists"));
+// recommend
+const getRecommendFeed_1 = __importDefault(require("./recommend/getRecommendFeed"));
 // search
 const getHotKey_1 = __importDefault(require("./search/getHotKey"));
 const getSearchByKey_1 = __importDefault(require("./search/getSearchByKey"));
@@ -43,11 +45,15 @@ const songListDetail_1 = __importDefault(require("./songLists/songListDetail"));
 const songLists_1 = __importDefault(require("./songLists/songLists"));
 // UCommon
 const UCommon_1 = __importDefault(require("./UCommon/UCommon"));
+const getPlayRecently_1 = __importDefault(require("./user/getPlayRecently"));
 // user
 const getRelationList_1 = __importDefault(require("./user/getRelationList"));
 const getUserFavAlbum_1 = __importDefault(require("./user/getUserFavAlbum"));
 const getUserFavDiss_1 = __importDefault(require("./user/getUserFavDiss"));
 const getUserProfile_1 = __importDefault(require("./user/getUserProfile"));
+const playRecentlyWrite_1 = require("./user/playRecentlyWrite");
+const feedbackBlack_1 = require("./user/feedbackBlack");
+const refreshCredential_1 = __importDefault(require("./user/refreshCredential"));
 exports.default = {
     downloadQQMusic: downloadQQMusic_1.default,
     // search
@@ -91,9 +97,19 @@ exports.default = {
     UCommon: UCommon_1.default,
     // user
     getUserProfile: getUserProfile_1.default,
+    getPlayRecently: getPlayRecently_1.default,
+    reportPlayRecently: playRecentlyWrite_1.reportPlayRecently,
+    deletePlayRecently: playRecentlyWrite_1.deletePlayRecently,
     getUserFavDiss: getUserFavDiss_1.default,
     getUserFavAlbum: getUserFavAlbum_1.default,
     getRelationList: getRelationList_1.default,
+    refreshCredential: refreshCredential_1.default,
     // getTopLists
     getTopLists: getTopLists_1.default,
+    // recommend（为你推荐·个性化歌单流）
+    getRecommendFeed: getRecommendFeed_1.default,
+    // 不喜欢/黑名单（FeedbackBlack，猜你喜欢等「删除这首歌曲」按钮）
+    addDislike: feedbackBlack_1.addDislike,
+    cancelDislike: feedbackBlack_1.cancelDislike,
+    getDislikeList: feedbackBlack_1.getDislikeList,
 };

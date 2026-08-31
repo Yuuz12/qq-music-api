@@ -45,6 +45,12 @@ exports.apiExplorerBaseRoutes = [
         routePath: '/getSearchByKey/:key?/:limit?/:page?/:catZhida?',
         category: 'Search',
     },
+    {
+        name: 'getSearchByType',
+        method: 'GET',
+        routePath: '/getSearchByType/:key?/:limit?/:page?/:t?',
+        category: 'Search',
+    },
     { name: 'getSmartbox', method: 'GET', routePath: '/getSmartbox/:key?', category: 'Search' },
     {
         name: 'getSongListCategories',
@@ -165,6 +171,21 @@ exports.apiExplorerBaseRoutes = [
         routePath: '/getRelationList',
         category: 'User',
     },
+    { name: 'getPlayRecently', method: 'GET', routePath: '/getPlayRecently', category: 'User' },
+    {
+        name: 'reportPlayRecently',
+        method: 'POST',
+        routePath: '/reportPlayRecently',
+        category: 'User',
+    },
+    {
+        name: 'deletePlayRecently',
+        method: 'POST',
+        routePath: '/deletePlayRecently',
+        category: 'User',
+    },
+    { name: 'userRefresh', method: 'GET', routePath: '/user/refresh', category: 'User' },
+    { name: 'userRefresh', method: 'POST', routePath: '/user/refresh', category: 'User' },
     {
         name: 'getDigitalAlbumLists',
         method: 'GET',
@@ -196,6 +217,12 @@ exports.apiExplorerBaseRoutes = [
         category: 'Common',
     },
     { name: 'getRecommend', method: 'GET', routePath: '/getRecommend', category: 'Recommend' },
+    {
+        name: 'getRecommendFeed',
+        method: 'GET',
+        routePath: '/getRecommendFeed',
+        category: 'Recommend',
+    },
     {
         name: 'getDailyPlaylist',
         method: 'GET',
@@ -534,6 +561,44 @@ exports.apiExplorerOverrides = {
                 description: 'Target user encrypt uin; empty = self.',
             },
         ],
+    },
+    getPlayRecently: {
+        id: 'get-play-recently',
+        description: 'Get cloud play-recently list (最近播放, client-native sync interface music.musicasset.PlayRecentlyRead.GetPlayRecentlyInfo). type=2 returns up to 500 songs (track in new format + lastTime/listenCnt/lastPlayDevice), 3=albums, 4=playlists, 1=all-summary. Requires cookie; sign not required.',
+        queryParams: [
+            {
+                key: 'type',
+                label: 'Type',
+                required: false,
+                inputType: 'number',
+                defaultValue: 2,
+                description: '2 = songs (default), 3 = albums, 4 = playlists, 1 = all-category summary.',
+            },
+        ],
+    },
+    reportPlayRecently: {
+        id: 'report-play-recently',
+        description: 'Report one play to cloud recently-played (client-same music.musicasset.PlayRecentlyWrite.ReportPlayRecentlyInfo: listenCnt increment +1, lastTime = now). Requires cookie. response.data.innerCode === 0 means written; the cloud list on all devices updates immediately.',
+        bodyDescription: 'JSON body with songId.',
+        bodyExample: {
+            songId: 301964992,
+        },
+    },
+    deletePlayRecently: {
+        id: 'delete-play-recently',
+        description: 'Delete one song from cloud recently-played (music.musicasset.PlayRecentlyWrite.DeletePlayRecentlyInfo). Requires cookie. response.data.innerCode === 0 means deleted; removal syncs to all devices.',
+        bodyDescription: 'JSON body with songId.',
+        bodyExample: {
+            songId: 301964992,
+        },
+    },
+    userRefresh: {
+        id: 'user-refresh',
+        description: 'Refresh login (延长登录有效期, ported from jsososo /user/refresh): exchange current musickey for a new one via QQConnectLogin.LoginServer/QQLogin. Requires credential headers. Returns new musickey in response.data; code 1000 means the key has expired and re-login (QR scan) is required.',
+    },
+    getRecommendFeed: {
+        id: 'get-recommend-feed',
+        description: 'Personalized home recommend feed (为你推荐, same upstream as the QQ Music App recommend tab: music.recommend.RecommendFeed/get_recommend_feed). Returns playlist cards incl. 每日30首 (type=daily) and taste-based playlists with recommendation reason. With credential headers the content is personalized; without, generic hot playlists are returned.',
     },
 };
 const createApiExplorerEndpoint = (route, override = {}) => {

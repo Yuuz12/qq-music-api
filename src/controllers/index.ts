@@ -1,12 +1,15 @@
 import { withControllerLogging } from '../util/observability';
+import addDislike from './addDislike';
 import batchGetSongInfo from './batchGetSongInfo';
 import batchGetSongLists from './batchGetSongLists';
+import cancelDislike from './cancelDislike';
 import cookies from './cookies';
 import deletePlayRecently from './deletePlayRecently';
 import getAlbumInfo from './getAlbumInfo';
 import getComments from './getComments';
 import getDailyPlaylist from './getDailyPlaylist';
 import getDigitalAlbumLists from './getDigitalAlbumLists';
+import getDislikeList from './getDislikeList';
 import getDownloadQQMusic from './getDownloadQQMusic';
 import getHotKey from './getHotkey';
 import getImageUrl from './getImageUrl';
@@ -108,4 +111,7 @@ export default {
   getUserFavAlbum: withControllerLogging('getUserFavAlbum', getUserFavAlbum),
   getRelationList: withControllerLogging('getRelationList', getRelationList),
   refreshCredential: withControllerLogging('refreshCredential', refreshCredential),
+  addDislike: withControllerLogging('addDislike', addDislike),
+  cancelDislike: withControllerLogging('cancelDislike', cancelDislike),
+  getDislikeList: withControllerLogging('getDislikeList', getDislikeList),
 };

@@ -9,10 +9,10 @@ import { getRequestCookie, getRequestUin } from '../../util/requestCredential';
  * 2026-08 新增（本播放器项目适配）：
  * 「喜欢」按钮真实接口为 music.musicasset.PlaylistDetailWrite
  * （AddSonglist 添加 / DelSonglist 取消，dirId=201 为「我喜欢」）。
- * 但该写接口在登录态下强制要求官方前端加密（musics.fcg + zzc sign + ag-1 加密 body），
- * 纯 Node 无法复刻（实测明文/普通签名均被拒，返回 code 500026/80105）。
- * 因此写操作通过「官方通道代理」完成（scripts/qq-write-proxy.mjs，常驻 headless Edge）：
- * 代理在官方页面内 hook 请求明文，由官方请求库完成 签名→加密→发送→解密。
+ * 该写接口必须由官方前端完成 签名→加密→发送（musics.fcg + zzc sign + ag-1），
+ * 纯 Node 无法复刻。因此写操作通过「官方通道代理」完成（electron/write-bridge.mjs，
+ * 隐藏窗口 + 官方页面请求库）：代理在官方页面内 hook 请求明文，并复用官方页面自算的
+ * comm（g_tk 与登录态严格一致），由官方请求库完成 签名→加密→发送→解密。
  *
  * 多用户（2026-08）：把当前请求的凭据（cookie/uin）一并转发给代理，
  * 代理按 cookie 切换页面登录态，确保写入的是**用户自己**的「我喜欢」列表。

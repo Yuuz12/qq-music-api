@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const requestCredential_1 = require("../../util/requestCredential");
 const observability_1 = require("../../util/observability");
+const requestCredential_1 = require("../../util/requestCredential");
 /** 允许走 musicu 的类型（歌曲/歌词由老的 getSearchByKey 承担） */
 const ALLOWED_TYPES = new Set([1, 2, 3, 8]);
 exports.default = async ({ key, limit = 20, page = 1, t }) => {
@@ -13,7 +13,12 @@ exports.default = async ({ key, limit = 20, page = 1, t }) => {
     if (!ALLOWED_TYPES.has(searchType)) {
         return {
             status: 400,
-            body: { response: { code: -1, error: `invalid search type t=${t} (allowed: 1 singer / 2 album / 3 playlist / 8 user)` } },
+            body: {
+                response: {
+                    code: -1,
+                    error: `invalid search type t=${t} (allowed: 1 singer / 2 album / 3 playlist / 8 user)`,
+                },
+            },
         };
     }
     // 每页数量钳制到 30：实测 musicu 对歌手(1)/专辑(2)类型 num_per_page=50 会整页返回空（sum=0），
@@ -38,7 +43,10 @@ exports.default = async ({ key, limit = 20, page = 1, t }) => {
             },
         },
     };
-    (0, observability_1.logServiceRequest)('getSearchByType', '/cgi-bin/musicu.fcg', { search_type: searchType, query: key });
+    (0, observability_1.logServiceRequest)('getSearchByType', '/cgi-bin/musicu.fcg', {
+        search_type: searchType,
+        query: key,
+    });
     // 匿名请求会被上游随机风控（req_search.code=2001，约 2/3 概率），带登录 cookie 基本稳定；
     // 2001 时最多重试 2 次（间隔 300ms），显著提升匿名成功率
     let lastResponse = {};

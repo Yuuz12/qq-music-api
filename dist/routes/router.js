@@ -82,6 +82,8 @@ router.get('/getAlbumInfo/:albummid?', controllers_1.default.getAlbumInfo);
 router.get('/getComments/:id?/:rootcommentid?/:cid?/:pagesize?/:pagenum?/:cmd?/:reqtype?/:biztype?', controllers_1.default.getComments);
 // recommend
 router.get('/getRecommend', controllers_1.default.getRecommend);
+// recommend feed（首页「为你推荐」个性化歌单流，需登录 cookie 才个性化）
+router.get('/getRecommendFeed', controllers_1.default.getRecommendFeed);
 // daily playlist（每日30首/今日私享 disstid，需登录 cookie）
 router.get('/getDailyPlaylist', controllers_1.default.getDailyPlaylist);
 // mv play
@@ -96,10 +98,23 @@ router.get('/getTicketInfo', controllers_1.default.getTicketInfo);
 router.get('/getImageUrl', controllers_1.default.getImageUrl);
 // user profile（个人主页聚合：昵称/头像/粉丝/关注/我喜欢/创建的歌单）
 router.get('/getUserProfile', controllers_1.default.getUserProfile);
+// user refresh（刷新登录：用当前 musickey 换发新 key 延长有效期，对应 jsososo /user/refresh）
+router.get('/user/refresh', controllers_1.default.refreshCredential);
+// 同接口的 POST 别名（语义上属凭据维护操作）
+router.post('/user/refresh', controllers_1.default.refreshCredential);
 // user fav diss（收藏歌单列表，需登录 cookie）
 router.get('/getUserFavDiss', controllers_1.default.getUserFavDiss);
 // user fav album（收藏专辑列表，需登录 cookie）
 router.get('/getUserFavAlbum', controllers_1.default.getUserFavAlbum);
 // relation list（关注歌手/关注用户/粉丝列表，需登录 cookie）
 router.get('/getRelationList', controllers_1.default.getRelationList);
+// play recently（最近播放列表，云端同步接口 PlayRecentlyRead；需登录 cookie）
+router.get('/getPlayRecently', controllers_1.default.getPlayRecently);
+// play recently 写通道（客户端同款 PlayRecentlyWrite；需登录 cookie）
+router.post('/reportPlayRecently', controllers_1.default.reportPlayRecently);
+router.post('/deletePlayRecently', controllers_1.default.deletePlayRecently);
+// 不喜欢/黑名单（客户端「删除这首歌曲」按钮同款 FeedbackBlack；需登录 cookie）
+router.post('/addDislike', controllers_1.default.addDislike);
+router.post('/cancelDislike', controllers_1.default.cancelDislike);
+router.get('/getDislikeList', controllers_1.default.getDislikeList);
 exports.default = router;

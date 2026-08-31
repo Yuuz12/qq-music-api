@@ -164,4 +164,9 @@ router.get('/getPlayRecently', context.getPlayRecently);
 router.post('/reportPlayRecently', context.reportPlayRecently);
 router.post('/deletePlayRecently', context.deletePlayRecently);
 
+// 不喜欢/黑名单（客户端「删除这首歌曲」按钮同款 FeedbackBlack；需登录 cookie）
+router.post('/addDislike', context.addDislike);
+router.post('/cancelDislike', context.cancelDislike);
+router.get('/getDislikeList', context.getDislikeList);
+
 export default router;
