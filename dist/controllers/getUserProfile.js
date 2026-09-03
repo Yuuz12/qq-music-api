@@ -102,5 +102,7 @@ exports.default = async (ctx) => {
         return;
     }
     ctx.status = 200;
-    ctx.body = { response: { code: code === 0 ? -1 : code, data: { ...EMPTY_PROFILE, encryptUin: uin } } };
+    ctx.body = {
+        response: { code: code === 0 ? -1 : code, data: { ...EMPTY_PROFILE, encryptUin: uin } },
+    };
 };

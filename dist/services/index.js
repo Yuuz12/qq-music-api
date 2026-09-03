@@ -39,10 +39,10 @@ const getSimilarSinger_1 = __importDefault(require("./singers/getSimilarSinger")
 const getSingerDesc_1 = __importDefault(require("./singers/getSingerDesc"));
 const getSingerMv_1 = __importDefault(require("./singers/getSingerMv"));
 const getSingerStarNum_1 = __importDefault(require("./singers/getSingerStarNum"));
-const songListCategories_1 = __importDefault(require("./songLists/songListCategories"));
-const songListDetail_1 = __importDefault(require("./songLists/songListDetail"));
 // 官方 AI 歌单（百万收藏 211111 / 新歌推荐 211207 等专属通道）
 const aiSongListDetail_1 = __importDefault(require("./songLists/aiSongListDetail"));
+const songListCategories_1 = __importDefault(require("./songLists/songListCategories"));
+const songListDetail_1 = __importDefault(require("./songLists/songListDetail"));
 // song list
 const songLists_1 = __importDefault(require("./songLists/songLists"));
 // UCommon

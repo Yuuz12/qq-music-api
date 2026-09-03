@@ -10,7 +10,9 @@ const requestCredential_1 = require("../../util/requestCredential");
 /** 32 位大写 hex 随机 guid（上游仅作缓存标识，无需与登录态绑定） */
 const randomGuid = () => Array.from({ length: 8 }, () => Math.floor((1 + Math.random()) * 0x10000)
     .toString(16)
-    .slice(1)).join('').toUpperCase();
+    .slice(1))
+    .join('')
+    .toUpperCase();
 exports.default = async ({ params = {} } = {}) => {
     const disstid = Number(params.disstid || 0);
     if (!disstid) {
