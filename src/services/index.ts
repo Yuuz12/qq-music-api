@@ -34,6 +34,8 @@ import getSimilarSinger from './singers/getSimilarSinger';
 import getSingerDesc from './singers/getSingerDesc';
 import getSingerMv from './singers/getSingerMv';
 import getSingerStarNum from './singers/getSingerStarNum';
+// 官方 AI 歌单（百万收藏 211111 / 新歌推荐 211207 等专属通道）
+import aiSongListDetail from './songLists/aiSongListDetail';
 import songListCategories from './songLists/songListCategories';
 import songListDetail from './songLists/songListDetail';
 // song list
@@ -44,6 +46,7 @@ import { addDislike, cancelDislike, getDislikeList } from './user/feedbackBlack'
 import getPlayRecently from './user/getPlayRecently';
 // user
 import getRelationList from './user/getRelationList';
+import getUserCreatedDiss from './user/getUserCreatedDiss';
 import getUserFavAlbum from './user/getUserFavAlbum';
 import getUserFavDiss from './user/getUserFavDiss';
 import getUserProfile from './user/getUserProfile';
@@ -61,6 +64,7 @@ export default {
   songLists,
   songListCategories,
   songListDetail,
+  aiSongListDetail,
   // MV
   getMvByTag,
   // singer
@@ -93,6 +97,7 @@ export default {
   UCommon,
   // user
   getUserProfile,
+  getUserCreatedDiss,
   getPlayRecently,
   reportPlayRecently,
   deletePlayRecently,

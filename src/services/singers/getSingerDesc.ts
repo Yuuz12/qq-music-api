@@ -1,5 +1,4 @@
 import { AxiosRequestConfig } from 'axios';
-import moment from 'moment';
 import { logServiceFailure, logServiceRequest, logServiceSuccess } from '../../util/observability';
 import y_common from '../y_common';
 
@@ -17,7 +16,7 @@ export default ({ method = 'get', params = {}, option = {} }: GetSingerDescParam
     format: 'xml',
     outCharset: 'utf-8',
     utf8: 1,
-    r: moment().valueOf(),
+    r: Date.now(),
   });
   const options = Object.assign(option, {
     params: data,

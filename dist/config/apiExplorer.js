@@ -239,6 +239,10 @@ exports.apiExplorerBaseRoutes = [
     },
     { name: 'getTicketInfo', method: 'GET', routePath: '/getTicketInfo', category: 'Ticket' },
     { name: 'getImageUrl', method: 'GET', routePath: '/getImageUrl', category: 'Common' },
+    // 不喜欢/黑名单（客户端「删除这首歌曲」按钮同款 FeedbackBlack；需登录凭据）
+    { name: 'addDislike', method: 'POST', routePath: '/addDislike', category: 'User' },
+    { name: 'cancelDislike', method: 'POST', routePath: '/cancelDislike', category: 'User' },
+    { name: 'getDislikeList', method: 'GET', routePath: '/getDislikeList', category: 'User' },
 ];
 exports.apiExplorerOverrides = {
     getCookie: {
@@ -359,7 +363,37 @@ exports.apiExplorerOverrides = {
         ],
     },
     getMusicPlay: {
-        description: 'Get playable music URL by song MID.',
+        id: 'get-music-play',
+        description: 'Get playable music URL by song MID. Supports all quality tiers: m4a/128/320/ape/flac (base), xq (SQ无损省流 O600 ogg), nac (NAC 品质 O400 ogg), hires (Hi-Res 臻品音质 F000_*_hires.flac), master (臻品母带 F000_*_EM.flac), vinyl (黑胶音质 F000_*_BT.flac). Requires credential headers; returns empty url without cookie. mediaId (media_mid) is required for songs whose CDN filename differs from songmid.',
+        queryParams: [
+            {
+                key: 'songmid',
+                label: 'Song MID',
+                required: true,
+                placeholder: '003rJSwm3TechU',
+                description: 'Song MID (comma separated for batch).',
+            },
+            {
+                key: 'quality',
+                label: 'Quality',
+                placeholder: '128',
+                description: 'm4a / 128 / 320 / ape / flac / xq / nac / hires / master / vinyl',
+                defaultValue: '128',
+            },
+            {
+                key: 'mediaId',
+                label: 'Media ID',
+                placeholder: '003rJSwm3TechU',
+                description: 'CDN media_mid (strMediaMid); required when it differs from songmid.',
+            },
+            {
+                key: 'resType',
+                label: 'Response Type',
+                placeholder: 'play',
+                description: 'play = only the playUrl map; otherwise the full vkey response.',
+                defaultValue: 'play',
+            },
+        ],
     },
     getAlbumInfo: {
         id: 'get-album-info',
@@ -480,7 +514,15 @@ exports.apiExplorerOverrides = {
     },
     getUserProfile: {
         id: 'get-user-profile',
-        description: 'Get user profile aggregation: nick/avatar/fans/following/我喜欢/custom playlists.',
+        description: 'Get user profile aggregation: nick/avatar/fans/following/我喜欢/custom playlists. Empty uin = current login user; pass another user encrypt uin (EncUin) to read their homepage.',
+        queryParams: [
+            {
+                key: 'uin',
+                label: 'Target EncUin',
+                required: false,
+                description: '目标用户加密 uin（getRelationList.encuin / 用户搜索结果）；留空查当前登录用户自己.',
+            },
+        ],
     },
     getUserFavDiss: {
         id: 'get-user-fav-diss',
@@ -599,6 +641,22 @@ exports.apiExplorerOverrides = {
     getRecommendFeed: {
         id: 'get-recommend-feed',
         description: 'Personalized home recommend feed (为你推荐, same upstream as the QQ Music App recommend tab: music.recommend.RecommendFeed/get_recommend_feed). Returns playlist cards incl. 每日30首 (type=daily) and taste-based playlists with recommendation reason. With credential headers the content is personalized; without, generic hot playlists are returned.',
+    },
+    addDislike: {
+        id: 'add-dislike',
+        description: '删除这首歌曲（不喜欢）：写入黑名单（客户端同款 user.FeedbackBlack/AddBlackList，需登录凭据）。response.data.innerCode === 0 表示成功。',
+        bodyDescription: 'JSON body with songId.',
+        bodyExample: { songId: 301964992 },
+    },
+    cancelDislike: {
+        id: 'cancel-dislike',
+        description: '取消不喜欢：从黑名单移除（客户端同款 user.FeedbackBlack/CancelBlackList，需登录凭据）。response.data.innerCode === 0 表示成功。',
+        bodyDescription: 'JSON body with songId.',
+        bodyExample: { songId: 301964992 },
+    },
+    getDislikeList: {
+        id: 'get-dislike-list',
+        description: '不喜欢（黑名单）列表：客户端「删除这首歌曲」功能的历史记录查询（需登录凭据），返回 response.data 黑名单结果。',
     },
 };
 const createApiExplorerEndpoint = (route, override = {}) => {

@@ -41,18 +41,21 @@ const getSingerMv_1 = __importDefault(require("./singers/getSingerMv"));
 const getSingerStarNum_1 = __importDefault(require("./singers/getSingerStarNum"));
 const songListCategories_1 = __importDefault(require("./songLists/songListCategories"));
 const songListDetail_1 = __importDefault(require("./songLists/songListDetail"));
+// 官方 AI 歌单（百万收藏 211111 / 新歌推荐 211207 等专属通道）
+const aiSongListDetail_1 = __importDefault(require("./songLists/aiSongListDetail"));
 // song list
 const songLists_1 = __importDefault(require("./songLists/songLists"));
 // UCommon
 const UCommon_1 = __importDefault(require("./UCommon/UCommon"));
+const feedbackBlack_1 = require("./user/feedbackBlack");
 const getPlayRecently_1 = __importDefault(require("./user/getPlayRecently"));
 // user
 const getRelationList_1 = __importDefault(require("./user/getRelationList"));
+const getUserCreatedDiss_1 = __importDefault(require("./user/getUserCreatedDiss"));
 const getUserFavAlbum_1 = __importDefault(require("./user/getUserFavAlbum"));
 const getUserFavDiss_1 = __importDefault(require("./user/getUserFavDiss"));
 const getUserProfile_1 = __importDefault(require("./user/getUserProfile"));
 const playRecentlyWrite_1 = require("./user/playRecentlyWrite");
-const feedbackBlack_1 = require("./user/feedbackBlack");
 const refreshCredential_1 = __importDefault(require("./user/refreshCredential"));
 exports.default = {
     downloadQQMusic: downloadQQMusic_1.default,
@@ -65,6 +68,7 @@ exports.default = {
     songLists: songLists_1.default,
     songListCategories: songListCategories_1.default,
     songListDetail: songListDetail_1.default,
+    aiSongListDetail: aiSongListDetail_1.default,
     // MV
     getMvByTag: getMvByTag_1.default,
     // singer
@@ -97,6 +101,7 @@ exports.default = {
     UCommon: UCommon_1.default,
     // user
     getUserProfile: getUserProfile_1.default,
+    getUserCreatedDiss: getUserCreatedDiss_1.default,
     getPlayRecently: getPlayRecently_1.default,
     reportPlayRecently: playRecentlyWrite_1.reportPlayRecently,
     deletePlayRecently: playRecentlyWrite_1.deletePlayRecently,

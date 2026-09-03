@@ -1,5 +1,4 @@
 import { AxiosRequestConfig } from 'axios';
-import moment from 'moment';
 import { logServiceFailure, logServiceRequest, logServiceSuccess } from '../../util/observability';
 import y_common from '../y_common';
 
@@ -16,7 +15,7 @@ export default ({ method = 'get', params = {}, option = {} }: GetSingerStarNumPa
     format: 'json',
     outCharset: 'utf-8',
     utf8: 1,
-    rnd: moment().valueOf(),
+    rnd: Date.now(),
   });
   const options = Object.assign(option, {
     params: data,

@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const moment_1 = __importDefault(require("moment"));
 const observability_1 = require("../../util/observability");
 const y_common_1 = __importDefault(require("../y_common"));
 const upstream = '/rsc/fcgi-bin/fcg_order_singer_getnum.fcg';
@@ -12,7 +11,7 @@ exports.default = ({ method = 'get', params = {}, option = {} }) => {
         format: 'json',
         outCharset: 'utf-8',
         utf8: 1,
-        rnd: (0, moment_1.default)().valueOf(),
+        rnd: Date.now(),
     });
     const options = Object.assign(option, {
         params: data,

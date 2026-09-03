@@ -212,6 +212,64 @@ docker pull qq-music-api
 - [x] 批量查询歌曲喜欢状态（红心，`SongFavRead/IsSongFanByMid`）**2026-08**
 - [x] 电台「删除」按钮统计上报还原（`fcg_val_report.fcg`）**2026-08**
 
+### 固化接口清单
+
+> 本项目（QQMP 桌面播放器）使用并固化的全部接口。带 <kbd>Cookie</kbd> 标记的接口需要配置
+> 登录凭据（个人主页「登录凭据」扫码 / 手动配置 `config/user-info`）才能返回有效数据。
+> 接口路由与 `src/routes/router.ts` 一一对应，元数据登记在 `src/config/apiExplorer.ts`
+> （`/explorer` 调试台直接可测），每条均有 controller + service + 单测覆盖。
+
+| Method | 路径 | 说明 | 备注 |
+| --- | --- | --- | --- |
+| GET | `/getSearchByKey` | 搜索歌曲/歌手/专辑 | |
+| GET | `/getSearchByType` | musicu 分类搜索（歌手/专辑/歌单/用户） | |
+| GET | `/getSmartbox` | 搜索联想提示 | |
+| GET | `/getHotkey` | 搜索热词 | |
+| GET | `/getSongListCategories` | 歌单分类 | |
+| GET | `/getSongLists` | 歌单列表 | |
+| POST | `/batchGetSongLists` | 批量歌单 | |
+| GET | `/getSongInfo` | 歌曲详情（含各音质文件大小） | |
+| POST | `/batchGetSongInfo` | 批量歌曲详情 | |
+| GET | `/getSongListDetail` | 歌单详情 | |
+| GET | `/getNewDisks` | 新碟上架 | |
+| GET | `/getMusicPlay` | 播放链接（m4a/128/320/flac/xq/nac/hires/master/vinyl 全部音质档） | <kbd>Cookie</kbd> |
+| GET | `/getLyric` | 歌词（解析结构） | |
+| GET | `/getComments` | 歌曲评论 | |
+| GET | `/downloadQQMusic` | 歌曲下载地址 | |
+| GET | `/getAlbumInfo` | 专辑详情 | |
+| GET | `/getImageUrl` | 图片 URL | |
+| GET | `/getMv` / `/getMvByTag` / `/getMvPlay` | MV 列表/标签/播放 | |
+| GET | `/getDigitalAlbumLists` | 数字专辑 | |
+| GET | `/getTopLists` / `/getRanks` | 排行榜单 / 榜单歌曲 | |
+| GET | `/getTicketInfo` | 票务信息 | |
+| GET | `/getSingerList` | 歌手列表 | |
+| GET | `/getSimilarSinger` | 相似歌手 | |
+| GET | `/getSingerAlbum` | 歌手专辑 | |
+| GET | `/getSingerHotsong` | 歌手热门歌曲 | |
+| GET | `/getSingerMv` | 歌手 MV | |
+| GET | `/getSingerDesc` | 歌手简介 | |
+| GET | `/getSingerStarNum` | 歌手被关注数 | |
+| GET | `/getRadioLists` / `/getRadioTrack` | 电台列表 / 电台歌曲（猜你喜欢） | |
+| POST | `/radioDislike` | 电台「删除」统计上报还原 | |
+| POST | `/setFav` | 添加/取消喜欢（「我喜欢」列表） | <kbd>Cookie</kbd> |
+| POST | `/getIsSongFan` | 批量查询歌曲喜欢状态（红心） | <kbd>Cookie</kbd> |
+| POST | `/setAlbumFav` / `/getIsAlbumFan` | 收藏专辑 / 批量查询专辑收藏状态 | <kbd>Cookie</kbd> |
+| POST | `/setPlaylistFav` / `/getIsPlaylistFan` | 收藏歌单 / 批量查询歌单收藏状态 | <kbd>Cookie</kbd> |
+| POST | `/addDislike` | 不喜欢（删除这首歌曲，写入黑名单） | <kbd>Cookie</kbd> |
+| POST | `/cancelDislike` | 取消不喜欢（移出黑名单） | <kbd>Cookie</kbd> |
+| GET | `/getDislikeList` | 黑名单列表 | <kbd>Cookie</kbd> |
+| GET | `/getRecommend` | 首页推荐（新碟等聚合） | |
+| GET | `/getRecommendFeed` | 为你推荐个性化流（App 同源） | <kbd>Cookie</kbd> 个性化 |
+| GET | `/getDailyPlaylist` | 每日30首（今日私享）disstid | <kbd>Cookie</kbd> |
+| GET | `/getUserProfile` | 个人主页聚合（昵称/头像/我喜欢/创建歌单） | <kbd>Cookie</kbd> |
+| GET | `/getUserFavDiss` / `/getUserFavAlbum` | 收藏歌单 / 收藏专辑列表 | <kbd>Cookie</kbd> |
+| GET | `/getRelationList` | 关注歌手/关注用户/粉丝列表 | <kbd>Cookie</kbd> |
+| GET | `/getPlayRecently` | 最近播放（云端同步读取） | <kbd>Cookie</kbd> |
+| POST | `/reportPlayRecently` | 最近播放上报（`PlayRecentlyWrite`） | <kbd>Cookie</kbd> |
+| POST | `/deletePlayRecently` | 删除一条最近播放 | <kbd>Cookie</kbd> |
+| GET/POST | `/user/refresh` | 刷新登录（延长 musickey 有效期） | <kbd>Cookie</kbd> |
+| GET | `/user/getCookie` / `/user/setCookie` | 读取 / 设置 cookie（调试台用） | |
+
 ### 使用文档
 
 使用`apis`详见[文档](https://rain120.github.io/qq-music-api/#/)

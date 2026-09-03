@@ -27,6 +27,7 @@ export default async (ctx: Context) => {
     subtype?: number;
     cnt?: number;
     cover?: string;
+    subtitle?: string;
     miscellany?: {
       cnt_content?: string;
       fav_cnt_content?: string;
@@ -66,6 +67,9 @@ export default async (ctx: Context) => {
         reasonTpl && reasonArg
           ? reasonTpl.replace('{String}', reasonArg)
           : c.miscellany?.rcmd_reason || '',
+      // 官方入口卡（百万收藏/新歌推荐）的副标题=当日第一首歌（客户端同款展示）
+      subtitle: String(c.subtitle || ''),
+      subtype: c.subtype || 0,
       type: c.subtype === 510 ? 'daily' : 'playlist',
     };
   };
@@ -90,13 +94,15 @@ export default async (ctx: Context) => {
   const sections = shelves.map((s) => {
     const cards = cardsOf(s);
     const playlists = cards
-      // 只保留歌单卡：jumptype 10014 + 纯数字 disstid + 有标题；排除每日30首无标题续卡(511)
+      // 歌单卡：jumptype 10014（普通/每日30首歌单）+ 纯数字 disstid + 有标题（排除每日30首无标题续卡 511）；
+      // 官方入口卡：jumptype 3003 + subtype 513（百万收藏 disstid=211111 / 新歌推荐 disstid=211207，
+      // 客户端 scheme 直接跳 ui/gedan 歌单页，见抓包样本 resp_023 与 recommend chunk 逆向）
       .filter(
         (c) =>
-          c.jumptype === 10014 &&
+          ((c.jumptype === 10014 && c.subtype !== 511) ||
+            (c.jumptype === 3003 && c.subtype === 513)) &&
           /^\d+$/.test(String(c.id || '')) &&
-          !!c.title &&
-          c.subtype !== 511,
+          !!c.title,
       )
       .map(toPlaylist);
     const songs = cards
@@ -114,6 +120,42 @@ export default async (ctx: Context) => {
 
   // 扁平歌单列表（兼容旧前端）：全部歌单版块的歌单卡按序合并
   const list = sections.flatMap((s) => s.list);
+
+  // 头部版块兜底：官方 AI 歌单「百万收藏」「新歌推荐」仅登录态由上游返回，
+  // 未登录形态缺失（实测 shelf 301 只有每日30首）——按客户端固定 disstid 补齐，
+  // 封面取官方运营配置图（CDN 静态资源）；登录态下上游已带则去重跳过
+  const headerSection = sections.find((s) => s.type === 'playlist');
+  if (headerSection) {
+    const officialEntries = [
+      {
+        disstid: '211111',
+        title: '百万收藏',
+        cover: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000003odwjd2FrEZn.jpg',
+        subtitle: '官方歌单 · 每日更新',
+      },
+      {
+        disstid: '211207',
+        title: '新歌推荐',
+        cover: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000001a538Y3iiJXf.jpg',
+        subtitle: '官方歌单 · 每日更新',
+      },
+    ];
+    for (const e of officialEntries) {
+      if (!headerSection.list.some((p) => p.disstid === e.disstid)) {
+        headerSection.list.push({
+          disstid: e.disstid,
+          title: e.title,
+          cover: e.cover,
+          playcnt: 0,
+          playcntText: '',
+          reason: '',
+          subtitle: e.subtitle,
+          subtype: 513,
+          type: 'playlist',
+        });
+      }
+    }
+  }
 
   ctx.status = status;
   ctx.body = {

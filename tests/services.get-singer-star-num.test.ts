@@ -1,8 +1,6 @@
 const mockYCommon = jest.fn();
-const mockMomentValueOf = jest.fn(() => 1710000000000);
-const mockMoment = jest.fn(() => ({
-  valueOf: mockMomentValueOf,
-}));
+
+jest.spyOn(Date, 'now').mockReturnValue(1710000000000);
 
 jest.mock('../src/services/y_common', () => ({
   __esModule: true,
@@ -19,11 +17,6 @@ jest.mock('../src/util/logger', () => ({
   },
 }));
 
-jest.mock('moment', () => ({
-  __esModule: true,
-  default: mockMoment,
-}));
-
 import getSingerStarNum from '../src/services/singers/getSingerStarNum';
 import { logger } from '../src/util/logger';
 
@@ -32,8 +25,6 @@ const mockedLogger = logger as jest.Mocked<typeof logger>;
 describe('services/getSingerStarNum', () => {
   beforeEach(() => {
     mockYCommon.mockReset();
-    mockMoment.mockClear();
-    mockMomentValueOf.mockClear();
     jest.clearAllMocks();
   });
 

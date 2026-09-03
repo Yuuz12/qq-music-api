@@ -1095,7 +1095,12 @@ songs: [
 
 - `justPlayUrl`: 仅返回播放链接, 默认是 `play`。`[all | play]`
 
-- `quality`: 播放品质, 默认是 128。`[m4a | 128 | 320 | ape | flac]`
+- `quality`: 播放品质, 默认是 128。`[m4a | 128 | 320 | ape | flac | xq | nac | hires | master | vinyl]`
+  - 省流档（本播放器项目 2026-09 新增）：`xq`=SQ无损省流（`O600{id}.ogg`，免费可播）、
+    `nac`=NAC 品质（AICodec 最高 76kbps；CDN 无独立文件，落地 `O400{id}.ogg` 省流 ogg）
+  - 臻品系（本播放器项目 2026-09 新增，客户端 22.52 面板档位）：`hires`=Hi-Res 臻品音质
+    （`F000{id}_hires.flac`）、`master`=臻品母带（`F000{id}_EM.flac`）、`vinyl`=黑胶音质
+    （`F000{id}_BT.flac`），与 flac 一样走 VIP 授权
 
 接口地址: `/getMusicPlay`
 
