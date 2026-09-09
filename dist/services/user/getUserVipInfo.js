@@ -40,7 +40,9 @@ function cookieValue(cookie, name) {
 exports.default = async () => {
     try {
         const cookie = (0, requestCredential_1.getRequestCookie)();
-        const key = cookieValue(cookie, 'qqmusic_key') || cookieValue(cookie, 'p_skey') || cookieValue(cookie, 'skey');
+        const key = cookieValue(cookie, 'qqmusic_key') ||
+            cookieValue(cookie, 'p_skey') ||
+            cookieValue(cookie, 'skey');
         const tk = key ? getACSRFToken(key) : 0;
         const uin = (0, requestCredential_1.getRequestUin)() || cookieValue(cookie, 'uin') || 0;
         const res = await axios_1.default.get('https://c.y.qq.com/portalcgi/fcgi-bin/music_mini_portal/fcg_getuser_infoEx.fcg', {
