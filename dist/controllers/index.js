@@ -53,6 +53,7 @@ const getTopLists_1 = __importDefault(require("./getTopLists"));
 const getUserFavAlbum_1 = __importDefault(require("./getUserFavAlbum"));
 const getUserFavDiss_1 = __importDefault(require("./getUserFavDiss"));
 const getUserProfile_1 = __importDefault(require("./getUserProfile"));
+const getUserVipInfo_1 = __importDefault(require("./getUserVipInfo"));
 const radioDislike_1 = __importDefault(require("./radioDislike"));
 const refreshCredential_1 = __importDefault(require("./refreshCredential"));
 const reportPlayRecently_1 = __importDefault(require("./reportPlayRecently"));
@@ -107,6 +108,7 @@ exports.default = {
     getTicketInfo: (0, observability_1.withControllerLogging)('getTicketInfo', getTicketInfo_1.default),
     getImageUrl: (0, observability_1.withControllerLogging)('getImageUrl', getImageUrl_1.default),
     getUserProfile: (0, observability_1.withControllerLogging)('getUserProfile', getUserProfile_1.default),
+    getUserVipInfo: (0, observability_1.withControllerLogging)('getUserVipInfo', getUserVipInfo_1.default),
     getPlayRecently: (0, observability_1.withControllerLogging)('getPlayRecently', getPlayRecently_1.default),
     reportPlayRecently: (0, observability_1.withControllerLogging)('reportPlayRecently', reportPlayRecently_1.default),
     deletePlayRecently: (0, observability_1.withControllerLogging)('deletePlayRecently', deletePlayRecently_1.default),

@@ -98,6 +98,8 @@ router.get('/getTicketInfo', controllers_1.default.getTicketInfo);
 router.get('/getImageUrl', controllers_1.default.getImageUrl);
 // user profile（个人主页聚合：昵称/头像/粉丝/关注/我喜欢/创建的歌单）
 router.get('/getUserProfile', controllers_1.default.getUserProfile);
+// user vip info（当前登录账号会员状态：绿钻 VIP / 豪华绿钻 SVIP，需登录 cookie）
+router.get('/getUserVipInfo', controllers_1.default.getUserVipInfo);
 // user refresh（刷新登录：用当前 musickey 换发新 key 延长有效期，对应 jsososo /user/refresh）
 router.get('/user/refresh', controllers_1.default.refreshCredential);
 // 同接口的 POST 别名（语义上属凭据维护操作）

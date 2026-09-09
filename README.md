@@ -262,6 +262,7 @@ docker pull qq-music-api
 | GET | `/getRecommendFeed` | 为你推荐个性化流（App 同源） | <kbd>Cookie</kbd> 个性化 |
 | GET | `/getDailyPlaylist` | 每日30首（今日私享）disstid | <kbd>Cookie</kbd> |
 | GET | `/getUserProfile` | 个人主页聚合（昵称/头像/我喜欢/创建歌单） | <kbd>Cookie</kbd> |
+| GET | `/getUserVipInfo` | 当前账号会员状态（绿钻 VIP / 豪华绿钻 SVIP） | <kbd>Cookie</kbd> |
 | GET | `/getUserFavDiss` / `/getUserFavAlbum` | 收藏歌单 / 收藏专辑列表 | <kbd>Cookie</kbd> |
 | GET | `/getRelationList` | 关注歌手/关注用户/粉丝列表 | <kbd>Cookie</kbd> |
 | GET | `/getPlayRecently` | 最近播放（云端同步读取） | <kbd>Cookie</kbd> |

@@ -55,6 +55,7 @@ const getUserCreatedDiss_1 = __importDefault(require("./user/getUserCreatedDiss"
 const getUserFavAlbum_1 = __importDefault(require("./user/getUserFavAlbum"));
 const getUserFavDiss_1 = __importDefault(require("./user/getUserFavDiss"));
 const getUserProfile_1 = __importDefault(require("./user/getUserProfile"));
+const getUserVipInfo_1 = __importDefault(require("./user/getUserVipInfo"));
 const playRecentlyWrite_1 = require("./user/playRecentlyWrite");
 const refreshCredential_1 = __importDefault(require("./user/refreshCredential"));
 exports.default = {
@@ -101,6 +102,7 @@ exports.default = {
     UCommon: UCommon_1.default,
     // user
     getUserProfile: getUserProfile_1.default,
+    getUserVipInfo: getUserVipInfo_1.default,
     getUserCreatedDiss: getUserCreatedDiss_1.default,
     getPlayRecently: getPlayRecently_1.default,
     reportPlayRecently: playRecentlyWrite_1.reportPlayRecently,

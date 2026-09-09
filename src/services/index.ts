@@ -50,6 +50,7 @@ import getUserCreatedDiss from './user/getUserCreatedDiss';
 import getUserFavAlbum from './user/getUserFavAlbum';
 import getUserFavDiss from './user/getUserFavDiss';
 import getUserProfile from './user/getUserProfile';
+import getUserVipInfo from './user/getUserVipInfo';
 import { deletePlayRecently, reportPlayRecently } from './user/playRecentlyWrite';
 import refreshCredential from './user/refreshCredential';
 
@@ -97,6 +98,7 @@ export default {
   UCommon,
   // user
   getUserProfile,
+  getUserVipInfo,
   getUserCreatedDiss,
   getPlayRecently,
   reportPlayRecently,

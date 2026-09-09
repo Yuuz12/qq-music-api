@@ -48,6 +48,7 @@ import getTopLists from './getTopLists';
 import getUserFavAlbum from './getUserFavAlbum';
 import getUserFavDiss from './getUserFavDiss';
 import getUserProfile from './getUserProfile';
+import getUserVipInfo from './getUserVipInfo';
 import radioDislike from './radioDislike';
 import refreshCredential from './refreshCredential';
 import reportPlayRecently from './reportPlayRecently';
@@ -104,6 +105,7 @@ export default {
   getTicketInfo: withControllerLogging('getTicketInfo', getTicketInfo),
   getImageUrl: withControllerLogging('getImageUrl', getImageUrl),
   getUserProfile: withControllerLogging('getUserProfile', getUserProfile),
+  getUserVipInfo: withControllerLogging('getUserVipInfo', getUserVipInfo),
   getPlayRecently: withControllerLogging('getPlayRecently', getPlayRecently),
   reportPlayRecently: withControllerLogging('reportPlayRecently', reportPlayRecently),
   deletePlayRecently: withControllerLogging('deletePlayRecently', deletePlayRecently),

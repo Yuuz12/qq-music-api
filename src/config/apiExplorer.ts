@@ -207,6 +207,7 @@ export const apiExplorerBaseRoutes: ApiExplorerBaseRoute[] = [
   },
   { name: 'getIsSongFan', method: 'POST', routePath: '/getIsSongFan', category: 'Favorite' },
   { name: 'getUserProfile', method: 'GET', routePath: '/getUserProfile', category: 'User' },
+  { name: 'getUserVipInfo', method: 'GET', routePath: '/getUserVipInfo', category: 'User' },
   { name: 'getUserFavDiss', method: 'GET', routePath: '/getUserFavDiss', category: 'User' },
   { name: 'getUserFavAlbum', method: 'GET', routePath: '/getUserFavAlbum', category: 'User' },
   {
@@ -411,7 +412,7 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
   getMusicPlay: {
     id: 'get-music-play',
     description:
-      'Get playable music URL by song MID. Supports all quality tiers: m4a/128/320/ape/flac (base), xq (SQ无损省流 O600 ogg), nac (NAC 品质 O400 ogg), hires (Hi-Res 臻品音质 F000_*_hires.flac), master (臻品母带 F000_*_EM.flac), vinyl (黑胶音质 F000_*_BT.flac). Requires credential headers; returns empty url without cookie. mediaId (media_mid) is required for songs whose CDN filename differs from songmid.',
+      'Get playable music URL by song MID. Supports all quality tiers: m4a/128/320/ape/flac (base), xq (SQ无损省流 O600 ogg), nac (NAC 品质 O400 ogg), master (臻品母带 AI00{id}.flac, 24bit/192kHz). Requires credential headers; returns empty url without cookie. mediaId (media_mid) is required for songs whose CDN filename differs from songmid.',
     queryParams: [
       {
         key: 'songmid',
@@ -424,7 +425,7 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
         key: 'quality',
         label: 'Quality',
         placeholder: '128',
-        description: 'm4a / 128 / 320 / ape / flac / xq / nac / hires / master / vinyl',
+        description: 'm4a / 128 / 320 / ape / flac / xq / nac / master',
         defaultValue: '128',
       },
       {
@@ -580,6 +581,11 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
           '目标用户加密 uin（getRelationList.encuin / 用户搜索结果）；留空查当前登录用户自己.',
       },
     ],
+  },
+  getUserVipInfo: {
+    id: 'get-user-vip-info',
+    description:
+      'Get current login account membership state (绿钻 VIP / 豪华绿钻 SVIP) from the official userinfo portal. Returns normalized level: vip|svip|none plus member flag for local quality-tier pre-check.',
   },
   getUserFavDiss: {
     id: 'get-user-fav-diss',
