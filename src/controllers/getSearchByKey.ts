@@ -9,7 +9,7 @@ interface SearchByKeyQuery {
   limit?: string | number;
   page?: string | number;
   catZhida?: string | number;
-  /** 搜索类型（上游 client_search_cp 的 t 参数）：0 歌曲 / 2 用户 / 3 歌单 / 7 歌词 / 8 专辑 / 9 歌手 */
+  /** 搜索类型（上游 musicu DoSearchForQQMusicDesktop 的 search_type）：0 歌曲 / 7 歌词 */
   t?: string | number;
 }
 

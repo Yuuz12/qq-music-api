@@ -1,4 +1,3 @@
-import { exec } from 'node:child_process';
 import path from 'node:path';
 import chalk from 'chalk';
 import Koa from 'koa';
@@ -17,7 +16,6 @@ import cookie from './util/cookie';
 import { logger, loggerState } from './util/logger';
 import { autoOpenExplorer } from './util/openExplorer';
 import './util/colors';
-import pkg from '../package.json';
 import { serverConfig, userInfo } from './config';
 
 const app = new Koa();
@@ -48,28 +46,6 @@ if (!userInfo.cookie) {
       `😔 The configuration ${chalk.red('cookie')} in file ${chalk.green('config/user-info')} has not configured. \n`,
     ),
   );
-}
-
-if (!isTestEnv) {
-  // 本播放器项目适配：try/catch 防止 exec 失败（如无 npm 环境/沙箱限制）导致服务启动崩溃
-  try {
-    const versionCheckProcess = exec('npm info qq-music-api version', (err, stdout) => {
-      if (!err) {
-        const version = stdout.trim();
-        if (pkg.version < version) {
-          logger.info(
-            chalk.white(
-              `Current Version: ${version}, Local Version: ${pkg.version}, Please update it.`,
-            ),
-          );
-        }
-      }
-    });
-
-    versionCheckProcess.unref();
-  } catch (e) {
-    logger.warn('version check skipped:', String(e));
-  }
 }
 
 app.use(bodyParser());

@@ -46,7 +46,7 @@ describe('GET /getSearchByKey', () => {
           n: 20,
           p: 1,
           catZhida: 1,
-          remoteplace: 'txt.yqq.song',
+          t: 0,
         }),
       }),
     );

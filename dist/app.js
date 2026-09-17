@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_child_process_1 = require("node:child_process");
 const node_path_1 = __importDefault(require("node:path"));
 const chalk_1 = __importDefault(require("chalk"));
 const koa_1 = __importDefault(require("koa"));
@@ -16,7 +15,6 @@ const cookie_1 = __importDefault(require("./util/cookie"));
 const logger_1 = require("./util/logger");
 const openExplorer_1 = require("./util/openExplorer");
 require("./util/colors");
-const package_json_1 = __importDefault(require("../package.json"));
 const config_1 = require("./config");
 const app = new koa_1.default();
 const isTestEnv = logger_1.loggerState.isTestEnv;
@@ -33,23 +31,6 @@ if (!(config_1.userInfo.loginUin || config_1.userInfo.uin)) {
 }
 if (!config_1.userInfo.cookie) {
     logger_1.logger.info(chalk_1.default.yellow(`😔 The configuration ${chalk_1.default.red('cookie')} in file ${chalk_1.default.green('config/user-info')} has not configured. \n`));
-}
-if (!isTestEnv) {
-    // 本播放器项目适配：try/catch 防止 exec 失败（如无 npm 环境/沙箱限制）导致服务启动崩溃
-    try {
-        const versionCheckProcess = (0, node_child_process_1.exec)('npm info qq-music-api version', (err, stdout) => {
-            if (!err) {
-                const version = stdout.trim();
-                if (package_json_1.default.version < version) {
-                    logger_1.logger.info(chalk_1.default.white(`Current Version: ${version}, Local Version: ${package_json_1.default.version}, Please update it.`));
-                }
-            }
-        });
-        versionCheckProcess.unref();
-    }
-    catch (e) {
-        logger_1.logger.warn('version check skipped:', String(e));
-    }
 }
 app.use((0, koa_bodyparser_1.default)());
 app.use((0, cookie_1.default)());
