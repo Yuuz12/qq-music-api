@@ -9,5 +9,9 @@ node_modules
 coverage/
 .trae/specs
 
-# local secrets
+# local secrets（含 QQ_MUSIC_COOKIE，绝不入库）
+# `.env.*` 覆盖 .env.local / .env.production / .env.development 等变体；示例文件放行
 .env
+.env.*
+!.env.example
+!**/.env.example
