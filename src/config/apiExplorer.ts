@@ -585,7 +585,7 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
   getUserVipInfo: {
     id: 'get-user-vip-info',
     description:
-      'Get current login account membership state (绿钻 VIP / 豪华绿钻 SVIP) from the official userinfo portal. Returns normalized level: vip|svip|none plus member flag for local quality-tier pre-check.',
+      'Get current login account membership state. Merges the official userinfo portal (绿钻族: vip=绿钻, svip=豪华绿钻) with the client VipLogin interface (HugeVip=超级会员) -- the portal alone cannot tell 豪华绿钻 from 超级会员. Returns normalized level: vip|svip|none, luxury (豪华绿钻), hugeVip (超级会员), svipKnown (false=超级会员档位未知) plus member flag for local quality-tier pre-check.',
   },
   getUserFavDiss: {
     id: 'get-user-fav-diss',

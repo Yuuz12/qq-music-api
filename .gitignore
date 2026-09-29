@@ -2,6 +2,11 @@
 node_modules
 *.log
 
+# 构建产物：npm run api / npm run prepare:api 每次都会从 src 重新编译
+# （scripts/build-api.mjs 用 esbuild、prepare-api-prod.mjs 用 tsc），
+# Dockerfile 也是直接在 src 上跑 ts-node，故无需入库
+dist/
+
 .idea/
 # package-lock.json
 

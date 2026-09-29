@@ -130,18 +130,39 @@ export default async (ctx: Context) => {
           get(response, 'req_0.data.sip', []).find((i: string) => !i.startsWith('http://ws')) ||
           get(response, 'req_0.data.sip[0]');
 
-        const playUrl: Record<string, { url: string; error: string | boolean }> = {};
+        /**
+         * 播放结果逐首结构化：除 url 外回传上游的裁决字段，让调用方能区分
+         * 「上游明确拒绝」与「接口限流/网络抖动」——两者都表现为 purl 为空，
+         * 但前者带非 0 的 result：
+         *   result=0      ：本档正常（purl 为空时说明是限流/该档无文件，属可重试的暂态）
+         *   result=104003 ：未登录 / 无播放权限（VIP、付费、版权下架），重试无意义
+         * （码值实测：匿名请求付费单曲「晴天」midurlinfo[].result=104003、purl 为空）
+         */
+        const playUrl: Record<
+          string,
+          { url: string; purl: boolean; result: number; denied: boolean; error: string | boolean }
+        > = {};
         get(response, 'req_0.data.midurlinfo', []).forEach(
-          (item: { songmid: string; purl: string }) => {
+          (item: { songmid: string; purl: string; result?: number | string }) => {
+            const result = Number(item.result) || 0;
+            const url = item.purl ? `${domain}${item.purl}` : '';
             playUrl[item.songmid] = {
-              url: item.purl ? `${domain}${item.purl}` : '',
+              url,
+              purl: !!item.purl,
+              result,
+              // 有非 0 裁决码且确实没给链接 = 上游明确拒绝（无权限/无该档文件），原地重试不会有结果
+              denied: !url && result !== 0,
               error: !item.purl && '暂无播放链接',
             };
           },
         );
         response.playUrl = playUrl;
         ctx.body = {
-          data: justPlayUrl ? { playUrl } : response,
+          // code：vkey 服务级返回码，非 0 表示本次请求整体失败（异常/限流）：
+          // 与逐首 denied 区分开，调用方按「暂态、可重试」处理
+          data: justPlayUrl
+            ? { playUrl, code: Number(get(response, 'req_0.code', 0)) || 0 }
+            : response,
         };
       })
       .catch((error: unknown) => {
