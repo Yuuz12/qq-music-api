@@ -50,6 +50,11 @@ function fromData(d: VipData) {
     member: family, // 绿钻级会员（音质预判里 flac 档的判定依据）
     // 超级会员档位未知（上游 B 接口失败）→ 前端对母带档放行，不误挡真超级会员
     svipKnown: d.svipKnown !== false,
+    // 会员成长等级（LV1-LV10；0=B 接口未取到/非会员，前端隐藏等级徽章）
+    lvLevel: Number(d.lvLevel) || 0,
+    nextLevel: Number(d.nextLevel) || 0,
+    upgradeDay: Number(d.upgradeDay) || 0,
+    upgradePct: Number(d.upgradePct) || 0,
     start: toText(d.start),
     end: toText(d.end), // 会员到期时间（官方字段名是 end，非 expire）
   };
@@ -62,6 +67,10 @@ const EMPTY = {
   hugeVip: 0,
   member: false,
   svipKnown: true,
+  lvLevel: 0,
+  nextLevel: 0,
+  upgradeDay: 0,
+  upgradePct: 0,
   start: '',
   end: '',
 };

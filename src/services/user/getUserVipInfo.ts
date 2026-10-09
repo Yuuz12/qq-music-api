@@ -146,6 +146,13 @@ export default async () => {
           // 超级会员：仅 B 的 identity.HugeVip（可听臻品母带）
           hugeVip: Number(ci.HugeVip) || 0,
           svipKnown: clientOk, // B 未取到 → 超级会员档位未知（前端按放行处理）
+          // 会员成长等级（VIP 体系 LV1-LV10，官方 vip_level 页同源；非会员/未知为 0）
+          // 与 nextlevel（下一级）/ upgradeday（距升级剩余天数）/ upgradepct（升级进度百分比）同组，
+          // 仅客户端接口 B 提供；B 失败时这组字段为 0，前端据此隐藏等级徽章
+          lvLevel: Number(ci.level) || 0,
+          nextLevel: Number(ci.nextlevel) || 0,
+          upgradeDay: Number(ci.upgradeday) || 0,
+          upgradePct: Number(ci.upgradepct) || 0,
           start: String(ld.start || ld.sstart || ''),
           end: String(ld.end || ld.send || ci.overdate || ''),
         },
