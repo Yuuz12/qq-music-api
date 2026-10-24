@@ -196,6 +196,8 @@ export const apiExplorerBaseRoutes: ApiExplorerBaseRoute[] = [
   },
   { name: 'radioDislike', method: 'POST', routePath: '/radioDislike', category: 'Radio' },
   { name: 'setFav', method: 'POST', routePath: '/setFav', category: 'Favorite' },
+  { name: 'addPlaylist', method: 'POST', routePath: '/addPlaylist', category: 'Favorite' },
+  { name: 'delPlaylist', method: 'POST', routePath: '/delPlaylist', category: 'Favorite' },
   { name: 'setAlbumFav', method: 'POST', routePath: '/setAlbumFav', category: 'Favorite' },
   { name: 'setPlaylistFav', method: 'POST', routePath: '/setPlaylistFav', category: 'Favorite' },
   { name: 'getIsAlbumFan', method: 'POST', routePath: '/getIsAlbumFan', category: 'Favorite' },
@@ -206,6 +208,9 @@ export const apiExplorerBaseRoutes: ApiExplorerBaseRoute[] = [
     category: 'Favorite',
   },
   { name: 'getIsSongFan', method: 'POST', routePath: '/getIsSongFan', category: 'Favorite' },
+  { name: 'setSingerConcern', method: 'POST', routePath: '/setSingerConcern', category: 'Singer' },
+  { name: 'setUserConcern', method: 'POST', routePath: '/setUserConcern', category: 'User' },
+  { name: 'getConcernStatus', method: 'POST', routePath: '/getConcernStatus', category: 'Singer' },
   { name: 'getUserProfile', method: 'GET', routePath: '/getUserProfile', category: 'User' },
   { name: 'getUserVipInfo', method: 'GET', routePath: '/getUserVipInfo', category: 'User' },
   { name: 'getUserFavDiss', method: 'GET', routePath: '/getUserFavDiss', category: 'User' },
@@ -521,6 +526,24 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
       isFan: false,
     },
   },
+  addPlaylist: {
+    id: 'add-playlist',
+    description:
+      'Create a playlist via music.musicasset.PlaylistBaseWrite (AddPlaylist, param { dirName }). Requires login cookie; no signature needed (direct musicu.fcg call). Response data.result = { tid, dirId, dirName, updateTime } — dirId is the internal id used to add/remove songs and to delete the playlist.',
+    bodyDescription: 'JSON body with the playlist name.',
+    bodyExample: {
+      dirName: 'QQMP测试歌单',
+    },
+  },
+  delPlaylist: {
+    id: 'del-playlist',
+    description:
+      'Delete one of your own playlists via music.musicasset.PlaylistBaseWrite (DelPlaylist, param { dirId } — NOT tid, which returns 1101). Requires login cookie; no signature needed (direct musicu.fcg call). dirId=201 (我喜欢) cannot be deleted.',
+    bodyDescription: 'JSON body with the internal dirId (from getUserProfile.disslist[].dirId).',
+    bodyExample: {
+      dirId: 9,
+    },
+  },
   setAlbumFav: {
     id: 'set-album-fav',
     description:
@@ -566,6 +589,36 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
     bodyDescription: 'JSON body with disstids array.',
     bodyExample: {
       disstids: ['7011264340'],
+    },
+  },
+  setSingerConcern: {
+    id: 'set-singer-concern',
+    description:
+      'Follow/unfollow a singer via Concern.ConcernSystemServer (cgi_concern_user_v2, param { opertype, source, userinfo:{usertype:1, userid:singermid}, encrypt_singerid:1 }). isFollow=true cancels, false follows. Requires login cookie AND a full comm (uin + g_tk from qm_keyst) — without g_tk the upstream rejects with 500026. No signature/official-page encryption needed (direct musicu.fcg).',
+    bodyDescription: 'JSON body with singer mid and current isFollow state.',
+    bodyExample: {
+      singermid: '0025NhlN2yWrP4',
+      isFollow: false,
+    },
+  },
+  getConcernStatus: {
+    id: 'get-concern-status',
+    description:
+      'Batch check follow state via Concern.ConcernSystemServer (cgi_qry_concern_status). Body: { mids?: string[], encuins?: string[] } — mids are singer mids (userinfo.usertype=1), encuins are user EncUins (usertype=0, from getRelationList.encuin); both can be queried in one call. Returns data.map_singer_status / data.map_user_status ({ id: 1|0 }). Basic comm is enough; requires login cookie. Upstream caches the state for a few seconds after a write.',
+    bodyDescription: 'JSON body with singer mids and/or user EncUins.',
+    bodyExample: {
+      mids: ['0025NhlN2yWrP4'],
+      encuins: ['oivioeol7i6P7c**'],
+    },
+  },
+  setUserConcern: {
+    id: 'set-user-concern',
+    description:
+      'Follow/unfollow a normal user via Concern.ConcernSystemServer (cgi_concern_user_v2, param { opertype, source, userinfo:{ usertype:0, userid:<EncUin> } } — no encrypt_singerid). isFollow=true cancels, false follows. Requires login cookie AND a full comm (uin + g_tk). EncUin comes from getRelationList.encuin.',
+    bodyDescription: 'JSON body with the target user EncUin and current isFollow state.',
+    bodyExample: {
+      encuin: 'oivioeol7i6P7c**',
+      isFollow: false,
     },
   },
   getUserProfile: {

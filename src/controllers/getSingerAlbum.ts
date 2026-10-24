@@ -10,13 +10,18 @@ interface SingerAlbumQuery {
   singermid: string;
   limit?: string | number;
   page?: string | number;
+  order?: string | number;
 }
 
 export default async (ctx: Context) => {
   const query = getTypedQuery<SingerAlbumQuery>(ctx);
   const singermid = query.singermid;
+  // ⚠️ 上游 num 实际封顶 80：传更大的 limit 也只返回 80 条；
+  // 分页游标须按「实际返回条数」推进，否则会整段丢数据（调用方见 app/src/singerAlbum.js）
   const num = +(query.limit || 5);
   const begin = +(query.page || 0);
+  // order：2=最新（默认，按发行时间倒序），1=热度
+  const order = +(query.order || 2);
   const data = {
     comm: {
       ct: 24,
@@ -26,6 +31,7 @@ export default async (ctx: Context) => {
       method: 'GetAlbumList',
       param: {
         sort: 5,
+        order,
         singermid,
         begin,
         num,

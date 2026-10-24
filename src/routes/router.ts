@@ -69,6 +69,15 @@ router.get('/getSingerDesc/:singermid?', context.getSingerDesc);
 
 router.get('/getSingerStarNum/:singermid?', context.getSingerStarNum);
 
+// concern（歌手关注/取关 + 关注状态，Concern.ConcernSystemServer；需登录 cookie）
+router.post('/setSingerConcern', context.setSingerConcern);
+
+// concern（用户关注/取关，关注/粉丝列表行内按钮；需登录 cookie）
+router.post('/setUserConcern', context.setUserConcern);
+
+// concern（批量查询歌手关注状态，歌手页「关注」按钮高亮；需登录 cookie）
+router.post('/getConcernStatus', context.getConcernStatus);
+
 // radio
 router.get('/getRadioLists', context.getRadioLists);
 
@@ -77,6 +86,10 @@ router.get('/getRadioTrack/:id?/:num?/:firstplay?', context.getRadioTrack);
 
 // fav（猜你喜欢页「喜欢」按钮：添加/取消喜欢到「我喜欢」列表）
 router.post('/setFav', context.setFav);
+
+// 歌单自身的创建 / 删除（PlaylistBaseWrite，免签 musicu.fcg 直连；需登录 cookie）
+router.post('/addPlaylist', context.addPlaylist);
+router.post('/delPlaylist', context.delPlaylist);
 
 // fav（收藏/取消收藏专辑，AlbumFavWrite；需登录 cookie）
 router.post('/setAlbumFav', context.setAlbumFav);

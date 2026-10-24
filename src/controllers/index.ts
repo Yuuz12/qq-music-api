@@ -1,12 +1,15 @@
 import { withControllerLogging } from '../util/observability';
 import addDislike from './addDislike';
+import addPlaylist from './addPlaylist';
 import batchGetSongInfo from './batchGetSongInfo';
 import batchGetSongLists from './batchGetSongLists';
 import cancelDislike from './cancelDislike';
 import cookies from './cookies';
 import deletePlayRecently from './deletePlayRecently';
+import delPlaylist from './delPlaylist';
 import getAlbumInfo from './getAlbumInfo';
 import getComments from './getComments';
+import getConcernStatus from './getConcernStatus';
 import getDailyPlaylist from './getDailyPlaylist';
 import getDigitalAlbumLists from './getDigitalAlbumLists';
 import getDislikeList from './getDislikeList';
@@ -55,6 +58,8 @@ import reportPlayRecently from './reportPlayRecently';
 import setAlbumFav from './setAlbumFav';
 import setFav from './setFav';
 import setPlaylistFav from './setPlaylistFav';
+import setSingerConcern from './setSingerConcern';
+import setUserConcern from './setUserConcern';
 
 const { get: getCookie, set: setCookie } = cookies;
 
@@ -82,10 +87,15 @@ export default {
   getSingerMv: withControllerLogging('getSingerMv', getSingerMv),
   getSingerDesc: withControllerLogging('getSingerDesc', getSingerDesc),
   getSingerStarNum: withControllerLogging('getSingerStarNum', getSingerStarNum),
+  getConcernStatus: withControllerLogging('getConcernStatus', getConcernStatus),
+  setSingerConcern: withControllerLogging('setSingerConcern', setSingerConcern),
+  setUserConcern: withControllerLogging('setUserConcern', setUserConcern),
   getRadioLists: withControllerLogging('getRadioLists', getRadioLists),
   getRadioTrack: withControllerLogging('getRadioTrack', getRadioTrack),
   radioDislike: withControllerLogging('radioDislike', radioDislike),
   setFav: withControllerLogging('setFav', setFav),
+  addPlaylist: withControllerLogging('addPlaylist', addPlaylist),
+  delPlaylist: withControllerLogging('delPlaylist', delPlaylist),
   setAlbumFav: withControllerLogging('setAlbumFav', setAlbumFav),
   setPlaylistFav: withControllerLogging('setPlaylistFav', setPlaylistFav),
   getIsAlbumFan: withControllerLogging('getIsAlbumFan', getIsAlbumFan),

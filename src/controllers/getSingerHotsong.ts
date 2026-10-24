@@ -10,6 +10,7 @@ interface SingerHotsongQuery {
   singermid: string;
   limit?: string | number;
   page?: string | number;
+  sort?: string | number;
 }
 
 export default async (ctx: Context) => {
@@ -17,6 +18,8 @@ export default async (ctx: Context) => {
   const singermid = query.singermid;
   const num = +(query.limit || 5);
   const page = +(query.page || 0);
+  // sort：5=热度（默认），2=最新（按发行时间倒序）
+  const sort = +(query.sort || 5);
   const data = {
     comm: {
       ct: 24,
@@ -25,7 +28,7 @@ export default async (ctx: Context) => {
     singer: {
       method: 'get_singer_detail_info',
       param: {
-        sort: 5,
+        sort,
         singermid,
         sin: (page - 1) * num,
         num,

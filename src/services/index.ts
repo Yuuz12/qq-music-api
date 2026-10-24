@@ -2,6 +2,10 @@
 import getAlbumInfo from './album/getAlbumInfo';
 // comments
 import getComments from './comments/getComments';
+// concern（歌手关注 / 取关）
+import getConcernStatus from './concern/getConcernStatus';
+import setSingerConcern from './concern/setSingerConcern';
+import setUserConcern from './concern/setUserConcern';
 // DigitalAlbum
 import getDigitalAlbumLists from './digitalAlbum/getDigitalAlbumLists';
 import downloadQQMusic from './downloadQQMusic';
@@ -36,6 +40,7 @@ import getSingerMv from './singers/getSingerMv';
 import getSingerStarNum from './singers/getSingerStarNum';
 // 官方 AI 歌单（百万收藏 211111 / 新歌推荐 211207 等专属通道）
 import aiSongListDetail from './songLists/aiSongListDetail';
+import { addPlaylist, delPlaylist } from './songLists/playlistBaseWrite';
 import songListCategories from './songLists/songListCategories';
 import songListDetail from './songLists/songListDetail';
 // song list
@@ -66,6 +71,9 @@ export default {
   songListCategories,
   songListDetail,
   aiSongListDetail,
+  // 歌单本身的创建 / 删除（PlaylistBaseWrite，免签 musicu.fcg 直连）
+  addPlaylist,
+  delPlaylist,
   // MV
   getMvByTag,
   // singer
@@ -73,6 +81,11 @@ export default {
   getSingerMv,
   getSingerDesc,
   getSingerStarNum,
+  // 歌手关注 / 取关（Concern.ConcernSystemServer，免签 musicu.fcg + 完整 comm）
+  getConcernStatus,
+  setSingerConcern,
+  // 用户关注 / 取关（usertype=0 + EncUin，关注/粉丝列表行内按钮）
+  setUserConcern,
   // radio
   getRadioLists,
   getRadioTrack,
