@@ -547,7 +547,7 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
   setAlbumFav: {
     id: 'set-album-fav',
     description:
-      'Favorite/unfavorite an album via music.musicasset.AlbumFavWrite (FavAlbum / CancelFavAlbum). isFan=true cancels, false favorites. Requires login cookie; write goes through the official-channel proxy (npm run proxy).',
+      'Favorite/unfavorite an album via music.musicasset.AlbumFavWrite (FavAlbum / CancelFavAlbum). isFan=true cancels, false favorites. Requires login cookie; uses the client-style direct write channel (works after /user/refresh).',
     bodyDescription: 'JSON body with albumMid and current isFan state.',
     bodyExample: {
       albumMid: '0016l2F430zMux',
@@ -575,7 +575,7 @@ export const apiExplorerOverrides: Record<string, Partial<ApiExplorerEndpoint>> 
   setPlaylistFav: {
     id: 'set-playlist-fav',
     description:
-      'Favorite/unfavorite a playlist via music.musicasset.PlaylistFavWrite (FavPlaylist / CancelFavPlaylist). isFan=true cancels, false favorites. Requires login cookie; write goes through the official-channel proxy (npm run proxy).',
+      'Favorite/unfavorite a playlist via music.musicasset.PlaylistFavWrite (FavPlaylist / CancelFavPlaylist). isFan=true cancels, false favorites. Requires login cookie; uses the client-style direct write channel (works after /user/refresh).',
     bodyDescription: 'JSON body with disstid and current isFan state.',
     bodyExample: {
       disstid: '7011264340',

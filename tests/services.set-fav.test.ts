@@ -1,8 +1,8 @@
-const mockPost = jest.fn();
+const mockGet = jest.fn();
 
 jest.mock('axios', () => ({
   __esModule: true,
-  default: { post: mockPost },
+  default: { get: mockGet },
 }));
 
 jest.mock('../src/util/logger', () => ({
@@ -18,100 +18,129 @@ jest.mock('../src/util/logger', () => ({
 import setFav, { DEFAULT_FAV_DIR_ID } from '../src/services/fav/setFav';
 import { runWithCredential } from '../src/util/requestCredential';
 
-const mockedPost = mockPost as jest.Mock;
+const mockedGet = mockGet as jest.Mock;
+const FULL_COOKIE = [
+  'uin=1234567890',
+  'p_uin=o1234567890',
+  'pt2gguin=o1234567890',
+  'qm_keyst=Q_H_L_test',
+  'qqmusic_key=Q_H_L_test',
+  'p_skey=WEBONLY',
+  'psrf_qqaccess_token=ACCESSTOKEN',
+  'psrf_qqopenid=OPENID',
+  'tmeLoginType=2',
+  'login_type=1',
+  'music_ignore_pskey=1',
+].join('; ');
 
-describe('services/setFav', () => {
+type FavResult = Awaited<ReturnType<typeof setFav>>;
+const withCred = (fn: () => Promise<FavResult>) =>
+  runWithCredential({ cookie: FULL_COOKIE, uin: '1234567890' }, fn);
+
+describe('services/setFav（客户端式免签直写）', () => {
   beforeEach(() => {
-    mockedPost.mockReset();
+    mockedGet.mockReset();
+    mockedGet.mockRejectedValue(new Error('network down'));
   });
 
-  it('未喜欢时通过官方通道代理调用 AddSonglist 写入 dirId=201（我喜欢）', async () => {
-    mockedPost.mockResolvedValue({
-      data: { ok: true, code: 0, raw: '{"code":0,"req_1":{"code":0}}' },
+  it('AddSonglist：用客户端最小 Cookie + 客户端 comm 直写', async () => {
+    mockedGet.mockResolvedValue({
+      data: { req_1: { code: 0, data: { result: { songlist: [] } } } },
     });
 
-    const result = await setFav({
-      dirId: 201,
-      songs: [{ songId: 1459873321, songType: 0 }],
-      isFan: false,
-    });
+    const result = await withCred(() => setFav({ songs: [{ songId: 1459873321, songType: 0 }] }));
 
-    expect(mockedPost).toHaveBeenCalledTimes(1);
-    const [url, payload, config] = mockedPost.mock.calls[0];
-    expect(url).toContain('/playlist-write');
-    expect(payload).toEqual({
-      dirId: 201,
-      method: 'AddSonglist',
-      songs: [{ songId: 1459873321, songType: 0 }],
-    });
-    expect(config.headers['Content-Type']).toBe('application/json');
+    expect(mockedGet).toHaveBeenCalledTimes(1);
+    const [url, config] = mockedGet.mock.calls[0];
+    expect(url).toContain('musicu.fcg');
+    expect(config.params.data).toContain('"method":"AddSonglist"');
+    expect(config.params.data).toContain('"dirId":201');
+    expect(config.params.data).toContain('"authst":"Q_H_L_test"');
+    expect(config.headers.Cookie).toContain('qm_keyst=Q_H_L_test');
+    expect(config.headers.Cookie).toContain('psrf_qqopenid=OPENID');
+    // 网页字段不能混进客户端最小集
+    expect(config.headers.Cookie).not.toContain('p_skey');
     expect(result).toEqual({
       status: 200,
       body: {
         response: {
           code: 0,
-          message: undefined,
-          data: { raw: '{"code":0,"req_1":{"code":0}}' },
+          data: { raw: expect.any(String) },
         },
       },
     });
   });
 
-  it('已喜欢时调用 DelSonglist（取消喜欢）', async () => {
-    mockedPost.mockResolvedValue({ data: { ok: true, code: 0 } });
+  it('已喜欢时调用 DelSonglist', async () => {
+    mockedGet.mockResolvedValue({ data: { req_1: { code: 0 } } });
 
-    await setFav({
-      dirId: 201,
-      songs: [{ songId: 123, songType: 1 }],
-      isFan: true,
-    });
+    await withCred(() => setFav({ songs: [{ songId: 123, songType: 1 }], isFan: true }));
 
-    const payload = mockedPost.mock.calls[0][1];
-    expect(payload.method).toBe('DelSonglist');
-    expect(payload.songs).toEqual([{ songId: 123, songType: 1 }]);
+    const payload = mockedGet.mock.calls[0][1].params.data;
+    expect(payload).toContain('"method":"DelSonglist"');
+    expect(payload).toContain('"songId":123');
   });
 
   it('默认 dirId=201，songType 缺省为 0，支持自定义 dirId', async () => {
-    mockedPost.mockResolvedValue({ data: { ok: true, code: 0 } });
+    mockedGet.mockResolvedValue({ data: { req_1: { code: 0 } } });
 
-    await setFav({ songs: [{ songId: 456 }] });
-    expect(mockedPost.mock.calls[0][1].dirId).toBe(DEFAULT_FAV_DIR_ID);
-    expect(mockedPost.mock.calls[0][1].songs).toEqual([{ songId: 456, songType: 0 }]);
+    await withCred(() => setFav({ songs: [{ songId: 456 }] }));
+    expect(mockedGet.mock.calls[0][1].params.data).toContain('"dirId":201');
+    expect(mockedGet.mock.calls[0][1].params.data).toContain('"songType":0');
 
-    await setFav({ dirId: 205, songs: [{ songId: 456, songType: 2 }] });
-    expect(mockedPost.mock.calls[1][1].dirId).toBe(205);
+    await withCred(() => setFav({ dirId: 205, songs: [{ songId: 456, songType: 2 }] }));
+    expect(mockedGet.mock.calls[1][1].params.data).toContain('"dirId":205');
   });
 
-  it('多用户：请求头下发的凭据（cookie/uin）随请求转发给代理', async () => {
-    mockedPost.mockResolvedValue({ data: { ok: true, code: 0 } });
+  it('遇到 80106 会短暂重试一次，成功后返回 code=0', async () => {
+    mockedGet
+      .mockResolvedValueOnce({ data: { req_1: { code: 80106 } } })
+      .mockResolvedValueOnce({ data: { req_1: { code: 0 } } });
 
-    await runWithCredential({ cookie: 'uin=1234567890; skey=abc', uin: '1234567890' }, () =>
-      setFav({ songs: [{ songId: 1459873321 }] }),
-    );
+    const result = await withCred(() => setFav({ songs: [{ songId: 1 }] }));
 
-    const payload = mockedPost.mock.calls[0][1];
-    expect(payload.cookie).toBe('uin=1234567890; skey=abc');
-    expect(payload.uin).toBe('1234567890');
+    expect(mockedGet).toHaveBeenCalledTimes(2);
+    expect(result.body.response.code).toBe(0);
   });
 
-  it('未配置凭据时不转发 cookie/uin 字段（保持兼容）', async () => {
-    mockedPost.mockResolvedValue({ data: { ok: true, code: 0 } });
+  it('持续 80106 时返回可重试提示', async () => {
+    mockedGet.mockResolvedValue({ data: { req_1: { code: 80106 } } });
 
-    await setFav({ songs: [{ songId: 456 }] });
+    const result = await withCred(() => setFav({ songs: [{ songId: 1 }] }));
 
-    const payload = mockedPost.mock.calls[0][1];
-    expect(payload).not.toHaveProperty('cookie');
-    expect(payload).not.toHaveProperty('uin');
+    expect(mockedGet).toHaveBeenCalledTimes(2);
+    expect(result.body.response.code).toBe(80106);
+    expect((result.body.response as { message?: string }).message).toContain('操作太频繁');
   });
 
-  it('代理返回错误时透出 message（如代理未启动提示）', async () => {
-    mockedPost.mockRejectedValue(new Error('connect ECONNREFUSED'));
+  it('80105 直接返回会话过期提示（不再走官方页面代理）', async () => {
+    mockedGet.mockResolvedValue({ data: { req_1: { code: 80105 } } });
 
+    const result = await withCred(() => setFav({ songs: [{ songId: 1 }] }));
+
+    expect(mockedGet).toHaveBeenCalledTimes(1);
+    expect(result.body.response.code).toBe(80105);
+    expect((result.body.response as { message?: string }).message).toContain('登录会话已过期');
+  });
+
+  it('未配置凭据时直接返回 -4，不发上游请求', async () => {
     const result = await setFav({ songs: [{ songId: 1 }] });
 
-    expect(result.status).toBe(500);
-    expect(result.body.response.code).toBe(-1);
-    expect(result.body.response.error).toContain('ECONNREFUSED');
-    expect(result.body.response.error).toContain('npm run proxy');
+    expect(mockedGet).not.toHaveBeenCalled();
+    expect(result.body.response.code).toBe(-4);
+  });
+
+  it('凭据缺少 qm_keyst 时返回 -4，不发上游请求', async () => {
+    const result = await runWithCredential(
+      { cookie: 'uin=1234567890; skey=abc', uin: '1234567890' },
+      () => setFav({ songs: [{ songId: 1 }] }),
+    );
+
+    expect(mockedGet).not.toHaveBeenCalled();
+    expect(result.body.response.code).toBe(-4);
+  });
+
+  it('DEFAULT_FAV_DIR_ID 保持 201', () => {
+    expect(DEFAULT_FAV_DIR_ID).toBe(201);
   });
 });

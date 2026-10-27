@@ -39,6 +39,16 @@ export interface RefreshCredentialResult {
       message?: string;
       data?: {
         musickey: string;
+        /** 刷新响应里的新 access token / openid / 过期时间等：前端同步回 Cookie，
+         *  客户端式收藏写通道会读取这些字段 */
+        access_token?: string;
+        refresh_token?: string;
+        expired_at?: number;
+        musickeyCreateTime?: number;
+        keyExpiresIn?: number;
+        openid?: string;
+        unionid?: string;
+        loginType?: number;
       };
     };
   };
@@ -88,7 +98,7 @@ export default async (): Promise<RefreshCredentialResult> => {
     });
     return res.data as {
       code?: number;
-      req1?: { code?: number; data?: { musickey?: string } };
+      req1?: { code?: number; data?: { musickey?: string; [key: string]: unknown } };
     };
   };
 
@@ -105,12 +115,33 @@ export default async (): Promise<RefreshCredentialResult> => {
 
     if (newKey) {
       logger.info('refreshCredential: 刷新登录成功', { uin });
+      // 把刷新响应里的会话字段一并回传：客户端式收藏写通道需要最新的 access token/openid。
+      // refresh_token 在 QQLogin 响应里可能为空，空值不下发，前端保留原值。
+      const d = (upstream?.req1?.data || {}) as Record<string, unknown>;
+      const pickString = (k: string): string | undefined => {
+        const v = d[k];
+        return typeof v === 'string' && v ? v : undefined;
+      };
+      const pickNumber = (k: string): number | undefined => {
+        const v = Number(d[k]);
+        return Number.isFinite(v) && v !== 0 ? v : undefined;
+      };
       return {
         status: 200,
         body: {
           response: {
             code: 0,
-            data: { musickey: newKey },
+            data: {
+              musickey: newKey,
+              access_token: pickString('access_token'),
+              refresh_token: pickString('refresh_token'),
+              expired_at: pickNumber('expired_at'),
+              musickeyCreateTime: pickNumber('musickeyCreateTime'),
+              keyExpiresIn: pickNumber('keyExpiresIn'),
+              openid: pickString('openid'),
+              unionid: pickString('unionid'),
+              loginType: pickNumber('loginType'),
+            },
           },
         },
       };
